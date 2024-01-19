@@ -1,1 +1,4 @@
-Prise en main de git et github et organisation du repo github avec Kerian et Jules.
+Prise en main de git et github et organisation du repo github avec Kerian et Jules. 
+Upload des différentes fiches techniques et documentations.
+Vérification du devis et de la compatibilité entre chaque capteurs pour le robot ainsi que de la possibilité d'acheter par mandat administratif.
+Mise en commun (et discussion) des interfaces et protocoles de communication entre les applis et le robot avec Jules et Kerian.
