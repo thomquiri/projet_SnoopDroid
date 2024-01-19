@@ -1,1 +1,1 @@
-test
+Prise en main de git et github et organisation du repo github avec Kerian et Jules.
