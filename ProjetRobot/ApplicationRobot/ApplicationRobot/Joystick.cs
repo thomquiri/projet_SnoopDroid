@@ -13,6 +13,8 @@ namespace ApplicationRobot
         private bool isDragging = false;
         private Point dragCursorPoint;
         private Point dragPictureBoxPoint;
+        private const float MaxRadius = 50.0f; // Rayon maximum du joystick
+        private const float Deadzone = 10.0f; // Ajustez la valeur de la deadzone selon les besoins
 
         public void CenterJoystickSmall()
         {
@@ -35,6 +37,12 @@ namespace ApplicationRobot
             pictureBoxJoystickSmall.MouseMove += new MouseEventHandler(pictureBoxJoystickSmall_MouseMove);
             pictureBoxJoystickSmall.MouseUp += new MouseEventHandler(pictureBoxJoystickSmall_MouseUp);
         }
+        public void DetachEvents()
+        {
+            pictureBoxJoystickSmall.MouseDown -= pictureBoxJoystickSmall_MouseDown;
+            pictureBoxJoystickSmall.MouseMove -= pictureBoxJoystickSmall_MouseMove;
+            pictureBoxJoystickSmall.MouseUp -= pictureBoxJoystickSmall_MouseUp;
+        }
 
         private void pictureBoxJoystickSmall_MouseDown(object? sender, MouseEventArgs e)
         {
@@ -50,11 +58,22 @@ namespace ApplicationRobot
                 Point diff = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
                 Point newLocation = Point.Add(dragPictureBoxPoint, new Size(diff));
 
-                // Limiter le mouvement à l'intérieur de pictureBoxJoystickBig
-                newLocation.X = Math.Max(newLocation.X, 0);
-                newLocation.Y = Math.Max(newLocation.Y, 0);
-                newLocation.X = Math.Min(newLocation.X, pictureBoxJoystickBig.Width - pictureBoxJoystickSmall.Width);
-                newLocation.Y = Math.Min(newLocation.Y, pictureBoxJoystickBig.Height - pictureBoxJoystickSmall.Height);
+                // Calculer la distance depuis le centre
+                Point center = new Point(
+                    (pictureBoxJoystickBig.Width - pictureBoxJoystickSmall.Width) / 2,
+                    (pictureBoxJoystickBig.Height - pictureBoxJoystickSmall.Height) / 2
+                );
+                double distance = Math.Sqrt(Math.Pow(newLocation.X - center.X, 2) + Math.Pow(newLocation.Y - center.Y, 2));
+
+                // Limiter le joystick à la zone circulaire
+                if (distance > MaxRadius)
+                {
+                    double ratio = MaxRadius / distance;
+                    newLocation = new Point(
+                        center.X + (int)((newLocation.X - center.X) * ratio),
+                        center.Y + (int)((newLocation.Y - center.Y) * ratio)
+                    );
+                }
 
                 pictureBoxJoystickSmall.Location = newLocation;
             }
@@ -73,7 +92,7 @@ namespace ApplicationRobot
         }
 
         // Méthode pour obtenir la direction du joystick
-        public Point GetDirection()
+        public (float angle, float magnitude) GetDirection()
         {
             Point center = new Point(
                 (pictureBoxJoystickBig.Width - pictureBoxJoystickSmall.Width) / 2,
@@ -81,7 +100,24 @@ namespace ApplicationRobot
             );
             Point currentPosition = pictureBoxJoystickSmall.Location;
 
-            return new Point(currentPosition.X - center.X, currentPosition.Y - center.Y);
+            Point direction = new Point(currentPosition.X - center.X, currentPosition.Y - center.Y);
+            float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
+
+            // Appliquer la deadzone
+            if (magnitude < Deadzone)
+            {
+                return (0, 0); // Retourner zéro si dans la deadzone
+            }
+
+            float angle = (float)Math.Atan2(direction.Y, direction.X); // Arc tangente de Y/X
+            return (angle, magnitude);
+        }
+        public float GetAngle()
+        {
+            // Utilisez directement les valeurs du tuple retourné par GetDirection
+            var (angle, magnitude) = GetDirection(); // Décomposer le tuple
+
+            return angle; // Renvoyer l'angle
         }
     }
 }

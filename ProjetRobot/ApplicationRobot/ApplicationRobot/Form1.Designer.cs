@@ -140,7 +140,7 @@
             pictureBoxJoystickSmall.BackColor = Color.Transparent;
             pictureBoxJoystickSmall.BackgroundImage = Properties.Resources.carreBleu;
             pictureBoxJoystickSmall.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBoxJoystickSmall.Location = new Point(34, 35);
+            pictureBoxJoystickSmall.Location = new Point(33, 37);
             pictureBoxJoystickSmall.Name = "pictureBoxJoystickSmall";
             pictureBoxJoystickSmall.Size = new Size(28, 29);
             pictureBoxJoystickSmall.TabIndex = 9;

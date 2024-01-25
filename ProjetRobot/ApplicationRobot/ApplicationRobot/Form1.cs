@@ -14,6 +14,7 @@ namespace ApplicationRobot
         private Image squareImage;
         private Joystick joystick;
         private Timer joystickTimer;
+        private DateTime lastUpdateTime;
         private const int squareSize = 50; // Taille du carré
         private const int moveDistance = 10; // Distance de déplacement pour chaque clic
 
@@ -22,7 +23,7 @@ namespace ApplicationRobot
             InitializeComponent();
             positionDisplayManager = new PositionDisplayManager(labelPosition);
             turnManager = new Turn();
-            squareImage = Image.FromFile(@"..\..\..\..\image\snoopdroidIcon.png"); // Mettez à jour le chemin vers votre image
+            squareImage = Image.FromFile(@"..\..\..\..\image\ScrappyIcon.png"); // Mettez à jour le chemin vers votre image
             // Initialiser le carré au milieu de la pictureBox
             square = new Square(pictureBoxMap1.Width / 2, pictureBoxMap1.Height / 2, squareSize, turnManager);
             DrawSquare();
@@ -31,20 +32,40 @@ namespace ApplicationRobot
             joystickTimer.Interval = 20; // Interval en millisecondes
             joystickTimer.Tick += JoystickTimer_Tick;
             joystickTimer.Start();
+
+            lastUpdateTime = DateTime.Now;
         }
 
         private void JoystickTimer_Tick(object? sender, EventArgs e)
         {
-            // Obtenir la direction du joystick
-            Point direction = joystick.GetDirection();
+            // Calculer le temps écoulé depuis le dernier update
+            DateTime now = DateTime.Now;
+            float elapsedTime = (float)(now - lastUpdateTime).TotalSeconds;
+            lastUpdateTime = now;
 
-            // Déplacer le carré en fonction de la direction du joystick
-            square.MoveByJoystick(direction, 1); // Vous pouvez ajuster le '1' pour rendre le mouvement plus rapide ou plus lent.
+            // Obtenir l'angle et la magnitude du joystick
+            (float angle, float magnitude) = joystick.GetDirection();
+
+            // Déplacer le carré en fonction de l'angle et de la magnitude du joystick
+            square.MoveByJoystick(angle, magnitude, elapsedTime);
 
             // Redessiner le carré
             DrawSquare();
         }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
 
+            // Arrêter et disposer le Timer
+            if (joystickTimer != null)
+            {
+                joystickTimer.Stop();
+                joystickTimer.Dispose();
+            }
+
+            // Détacher les événements du joystick
+            joystick?.DetachEvents();
+        }
         private void buttonUp_Click(object sender, EventArgs e)
         {
             square.Move(moveDistance, -90);
@@ -97,7 +118,7 @@ namespace ApplicationRobot
                 // Dessiner l'image du carré
                 g.DrawImage(squareImage, square.X, square.Y, squareImage.Width, squareImage.Height);
             }
-
+            pictureBoxMap1.Image?.Dispose();
             // Définir l'image du PictureBox avec le Bitmap mis à jour
             pictureBoxMap1.Image = bmp;
 

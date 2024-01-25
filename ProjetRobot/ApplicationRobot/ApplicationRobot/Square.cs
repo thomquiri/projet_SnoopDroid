@@ -34,12 +34,24 @@ namespace ApplicationRobot
             X += deltaX;
             Y -= deltaY; // Soustraire car l'axe Y est inversé dans la plupart des systèmes graphiques
         }
-        public void MoveByJoystick(Point direction, int sensitivity)
+        public void MoveByJoystick(float angle, float magnitude, float elapsedTime)
         {
-            // Utiliser 'direction.X' et 'direction.Y' pour déterminer comment déplacer le carré.
-            // 'sensitivity' est un facteur pour ajuster la quantité de mouvement en fonction de l'entrée du joystick.
-            X += direction.X * sensitivity;
-            Y += direction.Y * sensitivity;
+            // S'assurer que le mouvement est hors de la deadzone
+            if (magnitude == 0)
+            {
+                return; // Aucun mouvement si la magnitude est zéro
+            }
+
+            // Calculer le déplacement maximal autorisé en fonction du temps écoulé
+            float maxDisplacement = 50 * elapsedTime; // 50 pixels par seconde
+
+            // Calculer le déplacement en X et en Y en fonction de l'angle
+            float displacementX = maxDisplacement * (float)Math.Cos(angle);
+            float displacementY = maxDisplacement * (float)Math.Sin(angle);
+
+            // Appliquer le déplacement
+            X += (int)Math.Round(displacementX);
+            Y += (int)Math.Round(displacementY);
 
             // Vous pouvez également ajouter une logique pour s'assurer que le carré ne sorte pas de ses limites.
         }
