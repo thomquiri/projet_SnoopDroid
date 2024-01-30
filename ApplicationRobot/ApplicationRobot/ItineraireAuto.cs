@@ -17,6 +17,7 @@ namespace ApplicationRobot
         private Timer moveTimer;
         private int currentPointIndex = 0;
         private const int moveInterval = 20; // Millisecondes
+        private bool loopMode = false; // Pour suivre si le mode boucle est activé
 
         public ItineraireAuto(PictureBox pictureBox, Square square)
         {
@@ -48,8 +49,9 @@ namespace ApplicationRobot
             pictureBox.Invalidate(); // Demander le redessin de la PictureBox
         }
 
-        public void StartMoving()
+        public void StartMoving(bool loop = false)
         {
+            loopMode = loop; // Définir le mode boucle en fonction du paramètre
             currentPointIndex = 0; // Commencer au premier point
             if (points.Count > 0)
             {
@@ -78,8 +80,15 @@ namespace ApplicationRobot
                 currentPointIndex++; // Passer au point suivant
                 if (currentPointIndex >= points.Count)
                 {
-                    moveTimer.Stop(); // Arrêter le Timer si tous les points ont été atteints
-                    return;
+                    if (loopMode)
+                    {
+                        currentPointIndex = 0; // Recommencer depuis le début si en mode boucle
+                    }
+                    else
+                    {
+                        moveTimer.Stop(); // Arrêter le Timer si tous les points ont été atteints et pas en mode boucle
+                        return;
+                    }
                 }
                 currentPoint = points[currentPointIndex]; // Mettre à jour le point courant
                 moveVector = new Point(currentPoint.X - squarePosition.X, currentPoint.Y - squarePosition.Y);
@@ -101,6 +110,21 @@ namespace ApplicationRobot
                 g.FillEllipse(Brushes.Red, points[i].X - 5, points[i].Y - 5, 10, 10); // Dessiner un cercle pour chaque point
                 g.DrawString((i + 1).ToString(), SystemFonts.DefaultFont, Brushes.Black, points[i]);
             }
+        }
+        public void ResetPoints()
+        {
+            points.Clear(); // Effacer la liste des points
+            pictureBox.Invalidate(); // Demander le redessin de la PictureBox pour effacer les points anciens
+        }
+        public void CancelAdding()
+        {
+            // Annuler l'ajout de points
+            EnablePointAdding(false);
+            loopMode = false;
+
+            // Vous pouvez également effacer la liste de points si nécessaire
+            points.Clear();
+            pictureBox.Invalidate(); // Demander le redessin de la PictureBox
         }
     }
 }

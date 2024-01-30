@@ -15,3 +15,5 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ApplicationRobot
 build_property.ProjectDir = D:\Étude BTS 2ème année 2023 - 2024\ProjetRobot\backup\ApplicationRobot\ApplicationRobot\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

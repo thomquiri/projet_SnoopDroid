@@ -43,6 +43,8 @@
             buttonMapClick = new Button();
             buttonAddPos = new Button();
             buttonStartItin = new Button();
+            buttonCancel = new Button();
+            buttonStartItinBoucle = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBoxMap1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickBig).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickSmall).BeginInit();
@@ -181,20 +183,43 @@
             // 
             // buttonStartItin
             // 
-            buttonStartItin.Location = new Point(590, 354);
+            buttonStartItin.Location = new Point(659, 348);
             buttonStartItin.Name = "buttonStartItin";
-            buttonStartItin.Size = new Size(99, 43);
+            buttonStartItin.Size = new Size(108, 43);
             buttonStartItin.TabIndex = 13;
-            buttonStartItin.Text = "Suivre l'itinéraire";
+            buttonStartItin.Text = "Suivre l'itinéraire une fois";
             buttonStartItin.UseVisualStyleBackColor = true;
             buttonStartItin.Visible = false;
             buttonStartItin.Click += buttonStartItin_Click;
+            // 
+            // buttonCancel
+            // 
+            buttonCancel.Location = new Point(677, 620);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(111, 39);
+            buttonCancel.TabIndex = 14;
+            buttonCancel.Text = "Annuler";
+            buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
+            // 
+            // buttonStartItinBoucle
+            // 
+            buttonStartItinBoucle.Location = new Point(523, 348);
+            buttonStartItinBoucle.Name = "buttonStartItinBoucle";
+            buttonStartItinBoucle.Size = new Size(111, 43);
+            buttonStartItinBoucle.TabIndex = 15;
+            buttonStartItinBoucle.Text = "Suivre l'itinéraire en continue";
+            buttonStartItinBoucle.UseVisualStyleBackColor = true;
+            buttonStartItinBoucle.Visible = false;
+            buttonStartItinBoucle.Click += buttonStartItinBoucle_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 671);
+            Controls.Add(buttonStartItinBoucle);
+            Controls.Add(buttonCancel);
             Controls.Add(buttonStartItin);
             Controls.Add(buttonAddPos);
             Controls.Add(buttonMapClick);
@@ -233,5 +258,7 @@
         private Button buttonMapClick;
         private Button buttonAddPos;
         private Button buttonStartItin;
+        private Button buttonCancel;
+        private Button buttonStartItinBoucle;
     }
 }
