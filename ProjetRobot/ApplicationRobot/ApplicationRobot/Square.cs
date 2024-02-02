@@ -12,6 +12,8 @@ namespace ApplicationRobot
         public int Y { get; set; }
         public int Size { get; set; }
         private Turn turnManager;
+        private Backroom backroom;
+
 
         public Square(int x, int y, int size, Turn turnManager)
         {
@@ -19,6 +21,7 @@ namespace ApplicationRobot
             Y = y;
             Size = size;
             this.turnManager = turnManager;
+            backroom = new Backroom();
         }
 
         public void Move(int distance, float angleAdjustment)
@@ -30,6 +33,7 @@ namespace ApplicationRobot
             int deltaX = (int)(distance * Math.Cos(totalAngleInRadians));
             int deltaY = (int)(distance * Math.Sin(totalAngleInRadians));
 
+            
             // Appliquer le déplacement
             X += deltaX;
             Y -= deltaY; // Soustraire car l'axe Y est inversé dans la plupart des systèmes graphiques
