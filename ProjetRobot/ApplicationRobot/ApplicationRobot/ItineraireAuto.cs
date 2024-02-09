@@ -1,4 +1,16 @@
-﻿using System;
+﻿/// La classe ItineraireAuto gère un itinéraire automatique pour un objet Square dans une application de simulation de mouvement.
+/// Elle permet d'ajouter des points de passage, de déplacer le carré à travers ces points et de gérer un mode de déplacement en boucle.
+/// 
+/// Fonctionnalités principales :
+/// - Ajout de Points : Permet aux utilisateurs d'ajouter des points de passage en cliquant sur la PictureBox.
+/// - Déplacement Automatique : Déplace le carré automatiquement d'un point à l'autre en suivant l'itinéraire défini.
+/// - Mode Boucle : Offre la possibilité de faire tourner le carré en boucle sur l'itinéraire défini, avec un compteur de boucles.
+/// - Gestion de la Vitesse : Contrôle la vitesse de déplacement du carré pour assurer un mouvement fluide et constant.
+/// - Affichage de l'Itinéraire : Dessine visuellement l'itinéraire et les points sur la PictureBox pour une meilleure compréhension de la trajectoire.
+/// - Réinitialisation et Annulation : Offre des méthodes pour réinitialiser l'itinéraire, annuler l'ajout de points et arrêter le déplacement automatique.
+/// 
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -131,6 +143,7 @@ namespace ApplicationRobot
             EnablePointAdding(false);
             loopMode = false;
 
+            moveTimer?.Stop();
             // Vous pouvez également effacer la liste de points si nécessaire
             points.Clear();
             pictureBox.Invalidate(); // Demander le redessin de la PictureBox

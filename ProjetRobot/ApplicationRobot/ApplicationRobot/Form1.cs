@@ -1,3 +1,14 @@
+/// Form1 est le formulaire principal de l'application Robot, agissant comme le point central de coordination pour toutes les interactions utilisateur et la logique de mouvement.
+/// 
+/// Fonctionnalités clés de Form1 :
+/// - Gestion de plusieurs composants tels que Square, Joystick, PositionDisplayManager, Turn, Backroom et ItineraireAuto, permettant une simulation interactive de mouvement.
+/// - Fournit des contrôles pour le déplacement manuel du carré (Square), la rotation, ainsi que la gestion des itinéraires automatiques et des contrôles de joystick.
+/// - Utilise des Timers pour gérer les mises à jour continues basées sur le temps, telles que les mouvements de joystick.
+/// - Gère l'affichage et la mise à jour des positions du carré, ainsi que l'affichage des notifications spéciales lorsque le carré atteint certaines positions (géré par Backroom).
+/// - Permet l'ajout dynamique de points à l'itinéraire du carré et la visualisation de ces points, ainsi que le démarrage de mouvements automatisés le long de ces points.
+/// - Assure une interface utilisateur réactive et informe l'utilisateur des compteurs de boucles lorsqu'un itinéraire est suivi en mode boucle.
+/// 
+
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -16,6 +27,7 @@ namespace ApplicationRobot
         private Timer joystickTimer;
         private ItineraireAuto itineraireAuto;
         private Backroom backroom;
+        private Choice choiceManager;
         private DateTime lastUpdateTime;
         private const int squareSize = 50; // Taille du carré
         private const int moveDistance = 10; // Distance de déplacement pour chaque clic
@@ -23,6 +35,7 @@ namespace ApplicationRobot
         public Form1()
         {
             InitializeComponent();
+            DisableAllButtons();
             positionDisplayManager = new PositionDisplayManager(labelPosition);
             turnManager = new Turn();
             squareImage = Image.FromFile(@"..\..\..\..\image\ScrappyIcon.png"); // Mettez à jour le chemin vers votre image
@@ -30,6 +43,8 @@ namespace ApplicationRobot
             square = new Square(pictureBoxMap1.Width / 2, pictureBoxMap1.Height / 2, squareSize, turnManager);
             DrawSquare();
             backroom = new Backroom();
+            choiceManager = new Choice(pictureBoxMap1);
+            this.WindowState = FormWindowState.Maximized;
             joystick = new Joystick(pictureBoxJoystickBig, pictureBoxJoystickSmall);
             joystickTimer = new Timer();
             joystickTimer.Interval = 20; // Interval en millisecondes
@@ -39,8 +54,30 @@ namespace ApplicationRobot
             pictureBoxMap1.Paint += (sender, e) => itineraireAuto.Draw(e.Graphics);
 
             lastUpdateTime = DateTime.Now;
+            pictureBoxMap1.Paint += pictureBoxMap1_Paint; // Abonnement à l'événement Paint     
         }
 
+        private void pictureBoxMap1_Paint(object? sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            // Dessiner l'image de fond
+            if (pictureBoxMap1.BackgroundImage != null)
+            {
+                g.DrawImage(pictureBoxMap1.BackgroundImage, new Rectangle(0, 0, pictureBoxMap1.Width, pictureBoxMap1.Height));
+            }
+
+            // Dessiner le carré
+            if (squareImage != null && square != null)
+            {
+                Matrix transform = new Matrix();
+                transform.RotateAt(turnManager.CurrentAngle, new PointF(square.X + squareImage.Width / 2.0f, square.Y + squareImage.Height / 2.0f));
+                g.Transform = transform;
+                g.DrawImage(squareImage, square.X - square.Size / 2, square.Y - square.Size / 2, squareImage.Width, squareImage.Height);
+                positionDisplayManager.UpdatePosition(square.X, square.Y);
+            }
+            itineraireAuto.Draw(g);
+        }
         private void JoystickTimer_Tick(object? sender, EventArgs e)
         {
             // Calculer le temps écoulé depuis le dernier update
@@ -108,51 +145,8 @@ namespace ApplicationRobot
 
         private void DrawSquare()
         {
-            try
-            {
-                if (pictureBoxMap1.BackgroundImage == null)
-                {
-                    throw new InvalidOperationException("pictureBoxMap1.BackgroundImage is null.");
-                }
-
-                if (square == null)
-                {
-                    throw new InvalidOperationException("Square is null.");
-                }
-                // Créer un Bitmap basé sur l'image de fond originale de la PictureBox
-                Bitmap bmp = new Bitmap(pictureBoxMap1.BackgroundImage);
-
-                using (Graphics g = Graphics.FromImage(bmp))
-                {
-                    // Pas besoin de faire g.Clear() car nous dessinons sur l'image de fond fraîchement créée
-
-                    // Créer une transformation pour la rotation et la translation
-                    Matrix transform = new Matrix();
-                    transform.RotateAt(turnManager.CurrentAngle, new PointF(square.X + squareImage.Width / 2.0f, square.Y + squareImage.Height / 2.0f));
-                    g.Transform = transform;
-
-                    // Dessiner l'image du carré
-                    g.DrawImage(squareImage, square.X - square.Size / 2, square.Y - square.Size / 2, squareImage.Width, squareImage.Height);
-                }
-                pictureBoxMap1.Image?.Dispose();
-                // Définir l'image du PictureBox avec le Bitmap mis à jour
-                pictureBoxMap1.Image = bmp;
-                positionDisplayManager.UpdatePosition(square.X, square.Y);
-
-                if (backroom == null)
-                {
-                    throw new InvalidOperationException("Backroom is null.");
-                }
-
-                // Vérifier la position du carré et afficher le pop-up si nécessaire
-                backroom.CheckSquarePosition(square);
-            }
-            catch (Exception ex)
-            {
-                // Gérer l'exception (par exemple, enregistrer dans un fichier journal ou afficher un message)
-                Console.WriteLine(ex.Message);
-            }
-            // Mettre à jour le texte du label pour montrer la position actuelle
+            pictureBoxMap1.Invalidate();
+            positionDisplayManager.UpdatePosition(square.X, square.Y);
         }
 
         private void labelPosition_Click(object sender, EventArgs e)
@@ -178,6 +172,7 @@ namespace ApplicationRobot
             buttonMapClick.Enabled = false;
             buttonStartItin.Enabled = false;
             buttonStartItinBoucle.Enabled = false;
+            buttonChoice.Enabled = false;
 
             // Activer buttonAddPos et buttonCancel
             buttonAddPos.Enabled = true;
@@ -213,6 +208,7 @@ namespace ApplicationRobot
         {
             // Annuler l'action en cours
             itineraireAuto.CancelAdding();
+            joystickTimer?.Stop();  // Par exemple, si vous utilisez un Timer pour le déplacement
             buttonMapClick.Enabled = true;
 
             // Réactiver tous les autres boutons
@@ -222,7 +218,7 @@ namespace ApplicationRobot
         }
         private void EnableAllButtons()
         {
-            // Réactiver tous les boutons
+            // Réactiver tous les boutons sauf buttonAddPos
             buttonUp.Enabled = true;
             buttonDown.Enabled = true;
             buttonLeft.Enabled = true;
@@ -232,13 +228,30 @@ namespace ApplicationRobot
             buttonStartItin.Enabled = true;
             buttonStartItinBoucle.Enabled = true;
             buttonCancel.Enabled = true;
+            buttonChoice.Enabled = true;
             buttonAddPos.Enabled = false;
+        }
+
+        private void DisableAllButtons()
+        {
+            buttonUp.Enabled = false;
+            buttonDown.Enabled = false;
+            buttonLeft.Enabled = false;
+            buttonRight.Enabled = false;
+            buttonTurnLeft.Enabled = false;
+            buttonTurnRight.Enabled = false;
+            buttonStartItin.Enabled = false;
+            buttonStartItinBoucle.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonAddPos.Enabled = false;
+            buttonMapClick.Enabled = false;
+            buttonChoice.Enabled = true;
         }
         public void UpdateLoopCounterLabel(int loopCounter)
         {
             if (labelLoopCounter.InvokeRequired)
             {
-                labelLoopCounter.Invoke(new Action(() => labelLoopCounter.Text = $"Boucles complétées : {loopCounter}"));
+                labelLoopCounter.Invoke(new Action(() => labelLoopCounter.Text = $"Nombre de tour : {loopCounter}"));
             }
             else
             {
@@ -248,6 +261,13 @@ namespace ApplicationRobot
         private void labelLoopCounter_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void buttonChoice_Click(object sender, EventArgs e)
+        {
+            choiceManager.OpenImageDialog();
+            EnableAllButtons();
+            buttonMapClick.Enabled = true;
         }
     }
 }

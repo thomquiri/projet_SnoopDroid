@@ -1,4 +1,15 @@
-﻿using System;
+﻿/// La classe Joystick simule un joystick virtuel en utilisant deux PictureBox : une pour le joystick lui-même et l'autre pour sa base.
+/// Elle permet de traduire les mouvements de la souris en déplacements du joystick virtuel et calcule l'angle et la magnitude du mouvement.
+/// 
+/// Caractéristiques principales :
+/// - Gestion des interactions utilisateur : Clic et déplacement de la souris sont traduits en mouvements du joystick.
+/// - Limitation des mouvements : Les déplacements du joystick sont limités à une zone circulaire définie par MaxRadius.
+/// - Deadzone : Un seuil minimal de mouvement (Deadzone) est appliqué pour éviter les mouvements involontaires.
+/// - Calcul de direction : La classe fournit des méthodes pour obtenir l'angle et la magnitude du mouvement du joystick, 
+///   permettant ainsi une interaction précise et intuitive avec d'autres composants de l'application.
+/// 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

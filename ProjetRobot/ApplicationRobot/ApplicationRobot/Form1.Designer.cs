@@ -46,6 +46,7 @@
             buttonCancel = new Button();
             buttonStartItinBoucle = new Button();
             labelLoopCounter = new Label();
+            buttonChoice = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBoxMap1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickBig).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickSmall).BeginInit();
@@ -54,16 +55,15 @@
             // 
             // pictureBoxMap1
             // 
-            pictureBoxMap1.BackgroundImage = Properties.Resources.map;
             pictureBoxMap1.Location = new Point(12, 12);
             pictureBoxMap1.Name = "pictureBoxMap1";
-            pictureBoxMap1.Size = new Size(499, 500);
+            pictureBoxMap1.Size = new Size(327, 272);
             pictureBoxMap1.TabIndex = 0;
             pictureBoxMap1.TabStop = false;
             // 
             // buttonUp
             // 
-            buttonUp.Location = new Point(621, 12);
+            buttonUp.Location = new Point(1719, 9);
             buttonUp.Name = "buttonUp";
             buttonUp.Size = new Size(75, 61);
             buttonUp.TabIndex = 1;
@@ -73,7 +73,7 @@
             // 
             // buttonDown
             // 
-            buttonDown.Location = new Point(621, 185);
+            buttonDown.Location = new Point(1719, 182);
             buttonDown.Name = "buttonDown";
             buttonDown.Size = new Size(75, 61);
             buttonDown.TabIndex = 2;
@@ -83,7 +83,7 @@
             // 
             // buttonLeft
             // 
-            buttonLeft.Location = new Point(530, 97);
+            buttonLeft.Location = new Point(1628, 94);
             buttonLeft.Name = "buttonLeft";
             buttonLeft.Size = new Size(75, 61);
             buttonLeft.TabIndex = 3;
@@ -93,7 +93,7 @@
             // 
             // buttonRight
             // 
-            buttonRight.Location = new Point(719, 97);
+            buttonRight.Location = new Point(1817, 94);
             buttonRight.Name = "buttonRight";
             buttonRight.Size = new Size(75, 61);
             buttonRight.TabIndex = 4;
@@ -104,7 +104,7 @@
             // labelPosition
             // 
             labelPosition.AutoSize = true;
-            labelPosition.Location = new Point(530, 431);
+            labelPosition.Location = new Point(1628, 428);
             labelPosition.Name = "labelPosition";
             labelPosition.Size = new Size(100, 15);
             labelPosition.TabIndex = 5;
@@ -113,7 +113,7 @@
             // 
             // buttonTurnLeft
             // 
-            buttonTurnLeft.Location = new Point(530, 12);
+            buttonTurnLeft.Location = new Point(1628, 9);
             buttonTurnLeft.Name = "buttonTurnLeft";
             buttonTurnLeft.Size = new Size(75, 61);
             buttonTurnLeft.TabIndex = 6;
@@ -123,7 +123,7 @@
             // 
             // buttonTurnRight
             // 
-            buttonTurnRight.Location = new Point(719, 12);
+            buttonTurnRight.Location = new Point(1817, 9);
             buttonTurnRight.Name = "buttonTurnRight";
             buttonTurnRight.Size = new Size(75, 61);
             buttonTurnRight.TabIndex = 7;
@@ -156,14 +156,14 @@
             // 
             panel1.Controls.Add(pictureBoxJoystickSmall);
             panel1.Controls.Add(pictureBoxJoystickBig);
-            panel1.Location = new Point(611, 79);
+            panel1.Location = new Point(1709, 76);
             panel1.Name = "panel1";
             panel1.Size = new Size(102, 100);
             panel1.TabIndex = 10;
             // 
             // buttonMapClick
             // 
-            buttonMapClick.Location = new Point(530, 291);
+            buttonMapClick.Location = new Point(1628, 288);
             buttonMapClick.Name = "buttonMapClick";
             buttonMapClick.Size = new Size(111, 39);
             buttonMapClick.TabIndex = 11;
@@ -173,7 +173,7 @@
             // 
             // buttonAddPos
             // 
-            buttonAddPos.Location = new Point(666, 291);
+            buttonAddPos.Location = new Point(1764, 288);
             buttonAddPos.Name = "buttonAddPos";
             buttonAddPos.Size = new Size(108, 39);
             buttonAddPos.TabIndex = 12;
@@ -184,7 +184,7 @@
             // 
             // buttonStartItin
             // 
-            buttonStartItin.Location = new Point(666, 348);
+            buttonStartItin.Location = new Point(1764, 345);
             buttonStartItin.Name = "buttonStartItin";
             buttonStartItin.Size = new Size(108, 43);
             buttonStartItin.TabIndex = 13;
@@ -195,7 +195,7 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.Location = new Point(684, 620);
+            buttonCancel.Location = new Point(1764, 507);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(111, 39);
             buttonCancel.TabIndex = 14;
@@ -205,7 +205,7 @@
             // 
             // buttonStartItinBoucle
             // 
-            buttonStartItinBoucle.Location = new Point(530, 348);
+            buttonStartItinBoucle.Location = new Point(1628, 345);
             buttonStartItinBoucle.Name = "buttonStartItinBoucle";
             buttonStartItinBoucle.Size = new Size(111, 43);
             buttonStartItinBoucle.TabIndex = 15;
@@ -217,18 +217,29 @@
             // labelLoopCounter
             // 
             labelLoopCounter.AutoSize = true;
-            labelLoopCounter.Location = new Point(530, 458);
+            labelLoopCounter.Location = new Point(1628, 455);
             labelLoopCounter.Name = "labelLoopCounter";
             labelLoopCounter.Size = new Size(107, 15);
             labelLoopCounter.TabIndex = 16;
             labelLoopCounter.Text = "Nombre de tour : 0";
             labelLoopCounter.Click += labelLoopCounter_Click;
             // 
+            // buttonChoice
+            // 
+            buttonChoice.Location = new Point(1628, 507);
+            buttonChoice.Name = "buttonChoice";
+            buttonChoice.Size = new Size(111, 39);
+            buttonChoice.TabIndex = 17;
+            buttonChoice.Text = "Choisir un plan";
+            buttonChoice.UseVisualStyleBackColor = true;
+            buttonChoice.Click += buttonChoice_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(807, 671);
+            ClientSize = new Size(1904, 1041);
+            Controls.Add(buttonChoice);
             Controls.Add(labelLoopCounter);
             Controls.Add(buttonStartItinBoucle);
             Controls.Add(buttonCancel);
@@ -273,5 +284,6 @@
         private Button buttonCancel;
         private Button buttonStartItinBoucle;
         private Label labelLoopCounter;
+        private Button buttonChoice;
     }
 }
