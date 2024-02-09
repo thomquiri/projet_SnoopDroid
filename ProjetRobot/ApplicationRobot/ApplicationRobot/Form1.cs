@@ -67,13 +67,18 @@ namespace ApplicationRobot
                 g.DrawImage(pictureBoxMap1.BackgroundImage, new Rectangle(0, 0, pictureBoxMap1.Width, pictureBoxMap1.Height));
             }
 
+            // Sauvegarder l'état actuel des graphiques
+            GraphicsState state = g.Save();
             // Dessiner le carré
             if (squareImage != null && square != null)
             {
                 Matrix transform = new Matrix();
-                transform.RotateAt(turnManager.CurrentAngle, new PointF(square.X + squareImage.Width / 2.0f, square.Y + squareImage.Height / 2.0f));
+                PointF pivotPoint = new PointF(square.X, square.Y);
+                transform.RotateAt(turnManager.CurrentAngle, new PointF(square.X, square.Y));
                 g.Transform = transform;
                 g.DrawImage(squareImage, square.X - square.Size / 2, square.Y - square.Size / 2, squareImage.Width, squareImage.Height);
+                // Restaurer l'état des graphiques pour retirer la transformation
+                g.Restore(state);
                 positionDisplayManager.UpdatePosition(square.X, square.Y);
             }
             itineraireAuto.Draw(g);
@@ -133,13 +138,13 @@ namespace ApplicationRobot
         }
         private void buttonTurnRight_Click(object sender, EventArgs e)
         {
-            turnManager.TurnRight(10); // Tourner de 10 degrés vers la droite
+            turnManager.TurnRight(15); // Tourner de 10 degrés vers la droite
             DrawSquare();
         }
 
         private void buttonTurnLeft_Click(object sender, EventArgs e)
         {
-            turnManager.TurnLeft(10); // Tourner de 10 degrés vers la gauche
+            turnManager.TurnLeft(15); // Tourner de 10 degrés vers la gauche
             DrawSquare();
         }
 
@@ -208,7 +213,7 @@ namespace ApplicationRobot
         {
             // Annuler l'action en cours
             itineraireAuto.CancelAdding();
-            joystickTimer?.Stop();  // Par exemple, si vous utilisez un Timer pour le déplacement
+            //joystickTimer?.Stop();  // Par exemple, si vous utilisez un Timer pour le déplacement
             buttonMapClick.Enabled = true;
 
             // Réactiver tous les autres boutons
