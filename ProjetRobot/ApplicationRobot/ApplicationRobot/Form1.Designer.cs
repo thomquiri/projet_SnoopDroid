@@ -47,10 +47,15 @@
             buttonStartItinBoucle = new Button();
             labelLoopCounter = new Label();
             buttonChoice = new Button();
+            buttonItinPause = new Button();
+            buttonItinPlay = new Button();
+            buttonShowControls = new Button();
+            panelControl = new Panel();
             ((System.ComponentModel.ISupportInitialize)pictureBoxMap1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickBig).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickSmall).BeginInit();
             panel1.SuspendLayout();
+            panelControl.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBoxMap1
@@ -63,7 +68,7 @@
             // 
             // buttonUp
             // 
-            buttonUp.Location = new Point(1719, 9);
+            buttonUp.Location = new Point(94, 3);
             buttonUp.Name = "buttonUp";
             buttonUp.Size = new Size(75, 61);
             buttonUp.TabIndex = 1;
@@ -73,7 +78,7 @@
             // 
             // buttonDown
             // 
-            buttonDown.Location = new Point(1719, 182);
+            buttonDown.Location = new Point(94, 176);
             buttonDown.Name = "buttonDown";
             buttonDown.Size = new Size(75, 61);
             buttonDown.TabIndex = 2;
@@ -83,7 +88,7 @@
             // 
             // buttonLeft
             // 
-            buttonLeft.Location = new Point(1628, 94);
+            buttonLeft.Location = new Point(3, 88);
             buttonLeft.Name = "buttonLeft";
             buttonLeft.Size = new Size(75, 61);
             buttonLeft.TabIndex = 3;
@@ -93,7 +98,7 @@
             // 
             // buttonRight
             // 
-            buttonRight.Location = new Point(1817, 94);
+            buttonRight.Location = new Point(192, 88);
             buttonRight.Name = "buttonRight";
             buttonRight.Size = new Size(75, 61);
             buttonRight.TabIndex = 4;
@@ -104,7 +109,7 @@
             // labelPosition
             // 
             labelPosition.AutoSize = true;
-            labelPosition.Location = new Point(1628, 428);
+            labelPosition.Location = new Point(1623, 348);
             labelPosition.Name = "labelPosition";
             labelPosition.Size = new Size(100, 15);
             labelPosition.TabIndex = 5;
@@ -113,7 +118,7 @@
             // 
             // buttonTurnLeft
             // 
-            buttonTurnLeft.Location = new Point(1628, 9);
+            buttonTurnLeft.Location = new Point(3, 3);
             buttonTurnLeft.Name = "buttonTurnLeft";
             buttonTurnLeft.Size = new Size(75, 61);
             buttonTurnLeft.TabIndex = 6;
@@ -123,7 +128,7 @@
             // 
             // buttonTurnRight
             // 
-            buttonTurnRight.Location = new Point(1817, 9);
+            buttonTurnRight.Location = new Point(192, 3);
             buttonTurnRight.Name = "buttonTurnRight";
             buttonTurnRight.Size = new Size(75, 61);
             buttonTurnRight.TabIndex = 7;
@@ -156,16 +161,16 @@
             // 
             panel1.Controls.Add(pictureBoxJoystickSmall);
             panel1.Controls.Add(pictureBoxJoystickBig);
-            panel1.Location = new Point(1709, 76);
+            panel1.Location = new Point(84, 70);
             panel1.Name = "panel1";
             panel1.Size = new Size(102, 100);
             panel1.TabIndex = 10;
             // 
             // buttonMapClick
             // 
-            buttonMapClick.Location = new Point(1628, 288);
+            buttonMapClick.Location = new Point(1623, 403);
             buttonMapClick.Name = "buttonMapClick";
-            buttonMapClick.Size = new Size(111, 39);
+            buttonMapClick.Size = new Size(111, 43);
             buttonMapClick.TabIndex = 11;
             buttonMapClick.Text = "Placer un ou plusieurs points";
             buttonMapClick.UseVisualStyleBackColor = true;
@@ -173,9 +178,9 @@
             // 
             // buttonAddPos
             // 
-            buttonAddPos.Location = new Point(1764, 288);
+            buttonAddPos.Location = new Point(1749, 403);
             buttonAddPos.Name = "buttonAddPos";
-            buttonAddPos.Size = new Size(108, 39);
+            buttonAddPos.Size = new Size(108, 43);
             buttonAddPos.TabIndex = 12;
             buttonAddPos.Text = "Terminer";
             buttonAddPos.UseVisualStyleBackColor = true;
@@ -184,7 +189,7 @@
             // 
             // buttonStartItin
             // 
-            buttonStartItin.Location = new Point(1764, 345);
+            buttonStartItin.Location = new Point(1749, 462);
             buttonStartItin.Name = "buttonStartItin";
             buttonStartItin.Size = new Size(108, 43);
             buttonStartItin.TabIndex = 13;
@@ -195,7 +200,7 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.Location = new Point(1764, 507);
+            buttonCancel.Location = new Point(1764, 743);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(111, 39);
             buttonCancel.TabIndex = 14;
@@ -205,7 +210,7 @@
             // 
             // buttonStartItinBoucle
             // 
-            buttonStartItinBoucle.Location = new Point(1628, 345);
+            buttonStartItinBoucle.Location = new Point(1623, 462);
             buttonStartItinBoucle.Name = "buttonStartItinBoucle";
             buttonStartItinBoucle.Size = new Size(111, 43);
             buttonStartItinBoucle.TabIndex = 15;
@@ -217,7 +222,7 @@
             // labelLoopCounter
             // 
             labelLoopCounter.AutoSize = true;
-            labelLoopCounter.Location = new Point(1628, 455);
+            labelLoopCounter.Location = new Point(1623, 375);
             labelLoopCounter.Name = "labelLoopCounter";
             labelLoopCounter.Size = new Size(107, 15);
             labelLoopCounter.TabIndex = 16;
@@ -226,7 +231,7 @@
             // 
             // buttonChoice
             // 
-            buttonChoice.Location = new Point(1628, 507);
+            buttonChoice.Location = new Point(1628, 743);
             buttonChoice.Name = "buttonChoice";
             buttonChoice.Size = new Size(111, 39);
             buttonChoice.TabIndex = 17;
@@ -234,11 +239,61 @@
             buttonChoice.UseVisualStyleBackColor = true;
             buttonChoice.Click += buttonChoice_Click;
             // 
+            // buttonItinPause
+            // 
+            buttonItinPause.Location = new Point(1623, 522);
+            buttonItinPause.Name = "buttonItinPause";
+            buttonItinPause.Size = new Size(111, 43);
+            buttonItinPause.TabIndex = 18;
+            buttonItinPause.Text = "Arrêt temporaire";
+            buttonItinPause.UseVisualStyleBackColor = true;
+            buttonItinPause.Visible = false;
+            buttonItinPause.Click += buttonItinPause_Click;
+            // 
+            // buttonItinPlay
+            // 
+            buttonItinPlay.Location = new Point(1749, 522);
+            buttonItinPlay.Name = "buttonItinPlay";
+            buttonItinPlay.Size = new Size(108, 43);
+            buttonItinPlay.TabIndex = 19;
+            buttonItinPlay.Text = "Reprendre le trajet";
+            buttonItinPlay.UseVisualStyleBackColor = true;
+            buttonItinPlay.Visible = false;
+            buttonItinPlay.Click += buttonItinPlay_Click;
+            // 
+            // buttonShowControls
+            // 
+            buttonShowControls.Location = new Point(1749, 269);
+            buttonShowControls.Name = "buttonShowControls";
+            buttonShowControls.Size = new Size(123, 63);
+            buttonShowControls.TabIndex = 20;
+            buttonShowControls.Text = "Afficher/cacher les contrôles manuels";
+            buttonShowControls.UseVisualStyleBackColor = true;
+            buttonShowControls.Click += buttonShowControls_Click;
+            // 
+            // panelControl
+            // 
+            panelControl.Controls.Add(buttonTurnLeft);
+            panelControl.Controls.Add(buttonUp);
+            panelControl.Controls.Add(buttonDown);
+            panelControl.Controls.Add(buttonLeft);
+            panelControl.Controls.Add(buttonRight);
+            panelControl.Controls.Add(buttonTurnRight);
+            panelControl.Controls.Add(panel1);
+            panelControl.Location = new Point(1619, 12);
+            panelControl.Name = "panelControl";
+            panelControl.Size = new Size(273, 251);
+            panelControl.TabIndex = 21;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1904, 1041);
+            Controls.Add(panelControl);
+            Controls.Add(buttonShowControls);
+            Controls.Add(buttonItinPlay);
+            Controls.Add(buttonItinPause);
             Controls.Add(buttonChoice);
             Controls.Add(labelLoopCounter);
             Controls.Add(buttonStartItinBoucle);
@@ -246,14 +301,7 @@
             Controls.Add(buttonStartItin);
             Controls.Add(buttonAddPos);
             Controls.Add(buttonMapClick);
-            Controls.Add(panel1);
-            Controls.Add(buttonTurnRight);
-            Controls.Add(buttonTurnLeft);
             Controls.Add(labelPosition);
-            Controls.Add(buttonRight);
-            Controls.Add(buttonLeft);
-            Controls.Add(buttonDown);
-            Controls.Add(buttonUp);
             Controls.Add(pictureBoxMap1);
             Name = "Form1";
             Text = "Application Robot";
@@ -261,6 +309,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickBig).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickSmall).EndInit();
             panel1.ResumeLayout(false);
+            panelControl.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -285,5 +334,9 @@
         private Button buttonStartItinBoucle;
         private Label labelLoopCounter;
         private Button buttonChoice;
+        private Button buttonItinPause;
+        private Button buttonItinPlay;
+        private Button buttonShowControls;
+        private Panel panelControl;
     }
 }

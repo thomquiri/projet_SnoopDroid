@@ -148,5 +148,16 @@ namespace ApplicationRobot
             points.Clear();
             pictureBox.Invalidate(); // Demander le redessin de la PictureBox
         }
+        public void PauseMoving()
+        {
+            // Stops the timer and keeps the current position in the route.
+            moveTimer.Stop();
+        }
+
+        public void ResumeMoving()
+        {
+            // Starts the timer from the current position in the route.
+            moveTimer.Start();
+        }
     }
 }

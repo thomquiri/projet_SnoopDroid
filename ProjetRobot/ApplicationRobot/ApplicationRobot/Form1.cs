@@ -189,9 +189,11 @@ namespace ApplicationRobot
 
         private void buttonAddPos_Click(object sender, EventArgs e)
         {
-            itineraireAuto.EnablePointAdding(true);
+            itineraireAuto.EnablePointAdding(false);
             buttonStartItin.Show();
             buttonStartItinBoucle.Show();
+            buttonItinPause.Show();
+            buttonItinPlay.Show();
             buttonStartItin.Enabled = true;
             buttonStartItinBoucle.Enabled = true;
         }
@@ -213,6 +215,7 @@ namespace ApplicationRobot
         {
             // Annuler l'action en cours
             itineraireAuto.CancelAdding();
+            itineraireAuto.EnablePointAdding(false);
             //joystickTimer?.Stop();  // Par exemple, si vous utilisez un Timer pour le déplacement
             buttonMapClick.Enabled = true;
 
@@ -273,6 +276,28 @@ namespace ApplicationRobot
             choiceManager.OpenImageDialog();
             EnableAllButtons();
             buttonMapClick.Enabled = true;
+        }
+
+        private void buttonItinPause_Click(object sender, EventArgs e)
+        {
+            itineraireAuto.PauseMoving();
+        }
+
+        private void buttonItinPlay_Click(object sender, EventArgs e)
+        {
+            itineraireAuto.ResumeMoving();
+        }
+
+        private void buttonShowControls_Click(object sender, EventArgs e)
+        {
+            if (panelControl.Visible == true)
+            {
+                panelControl.Visible = false;
+            }
+            else
+            {
+                panelControl.Visible = true;
+            }
         }
     }
 }
