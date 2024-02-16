@@ -51,6 +51,8 @@
             buttonItinPlay = new Button();
             buttonShowControls = new Button();
             panelControl = new Panel();
+            buttonHistorique = new Button();
+            buttonMapLine = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBoxMap1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickBig).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickSmall).BeginInit();
@@ -168,7 +170,7 @@
             // 
             // buttonMapClick
             // 
-            buttonMapClick.Location = new Point(1623, 403);
+            buttonMapClick.Location = new Point(1623, 483);
             buttonMapClick.Name = "buttonMapClick";
             buttonMapClick.Size = new Size(111, 43);
             buttonMapClick.TabIndex = 11;
@@ -178,7 +180,7 @@
             // 
             // buttonAddPos
             // 
-            buttonAddPos.Location = new Point(1749, 403);
+            buttonAddPos.Location = new Point(1749, 483);
             buttonAddPos.Name = "buttonAddPos";
             buttonAddPos.Size = new Size(108, 43);
             buttonAddPos.TabIndex = 12;
@@ -189,7 +191,7 @@
             // 
             // buttonStartItin
             // 
-            buttonStartItin.Location = new Point(1749, 462);
+            buttonStartItin.Location = new Point(1749, 542);
             buttonStartItin.Name = "buttonStartItin";
             buttonStartItin.Size = new Size(108, 43);
             buttonStartItin.TabIndex = 13;
@@ -210,7 +212,7 @@
             // 
             // buttonStartItinBoucle
             // 
-            buttonStartItinBoucle.Location = new Point(1623, 462);
+            buttonStartItinBoucle.Location = new Point(1623, 542);
             buttonStartItinBoucle.Name = "buttonStartItinBoucle";
             buttonStartItinBoucle.Size = new Size(111, 43);
             buttonStartItinBoucle.TabIndex = 15;
@@ -241,7 +243,7 @@
             // 
             // buttonItinPause
             // 
-            buttonItinPause.Location = new Point(1623, 522);
+            buttonItinPause.Location = new Point(1623, 602);
             buttonItinPause.Name = "buttonItinPause";
             buttonItinPause.Size = new Size(111, 43);
             buttonItinPause.TabIndex = 18;
@@ -252,7 +254,7 @@
             // 
             // buttonItinPlay
             // 
-            buttonItinPlay.Location = new Point(1749, 522);
+            buttonItinPlay.Location = new Point(1749, 602);
             buttonItinPlay.Name = "buttonItinPlay";
             buttonItinPlay.Size = new Size(108, 43);
             buttonItinPlay.TabIndex = 19;
@@ -285,11 +287,33 @@
             panelControl.Size = new Size(273, 251);
             panelControl.TabIndex = 21;
             // 
+            // buttonHistorique
+            // 
+            buttonHistorique.Location = new Point(1628, 683);
+            buttonHistorique.Name = "buttonHistorique";
+            buttonHistorique.Size = new Size(111, 43);
+            buttonHistorique.TabIndex = 22;
+            buttonHistorique.Text = "Historique";
+            buttonHistorique.UseVisualStyleBackColor = true;
+            buttonHistorique.Click += buttonHistorique_Click;
+            // 
+            // buttonMapLine
+            // 
+            buttonMapLine.Location = new Point(1622, 424);
+            buttonMapLine.Name = "buttonMapLine";
+            buttonMapLine.Size = new Size(111, 43);
+            buttonMapLine.TabIndex = 23;
+            buttonMapLine.Text = "Placer une ligne";
+            buttonMapLine.UseVisualStyleBackColor = true;
+            buttonMapLine.Click += buttonMapLine_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1904, 1041);
+            Controls.Add(buttonMapLine);
+            Controls.Add(buttonHistorique);
             Controls.Add(panelControl);
             Controls.Add(buttonShowControls);
             Controls.Add(buttonItinPlay);
@@ -338,5 +362,7 @@
         private Button buttonItinPlay;
         private Button buttonShowControls;
         private Panel panelControl;
+        private Button buttonHistorique;
+        private Button buttonMapLine;
     }
 }

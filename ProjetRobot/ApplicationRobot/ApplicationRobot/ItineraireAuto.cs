@@ -18,6 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Timer = System.Windows.Forms.Timer;
+using System.Xml.Linq;
+using System.IO;
+using Microsoft.VisualBasic;
 
 namespace ApplicationRobot
 {
@@ -43,6 +46,10 @@ namespace ApplicationRobot
             moveTimer = new Timer();
             moveTimer.Interval = moveInterval;
             moveTimer.Tick += MoveTimer_Tick;
+        }
+        public List<Point> GetPoints()
+        {
+            return new List<Point>(this.points);
         }
         public int LoopCounter
         {
@@ -131,6 +138,22 @@ namespace ApplicationRobot
                 g.DrawString((i + 1).ToString(), SystemFonts.DefaultFont, Brushes.Black, points[i]);
             }
         }
+        public void ChargerItineraire(List<Point> nouvelItineraire)
+        {
+            // Remplacer l'itinéraire actuel par le nouvel itinéraire
+            this.points = new List<Point>(nouvelItineraire);
+
+            // Réinitialiser l'état pour commencer le mouvement depuis le début du nouvel itinéraire
+            this.currentPointIndex = 0;
+            this.loopCounter = 0;
+
+            // Optionnel : Réinitialiser d'autres états si nécessaire
+            // Exemple : Arrêter le mouvement actuel, si le carré est en déplacement
+            this.moveTimer.Stop();
+
+            // Demander la mise à jour de l'affichage si nécessaire
+            this.pictureBox.Invalidate();
+        }
         public void ResetPoints()
         {
             points.Clear(); // Effacer la liste des points
@@ -158,6 +181,75 @@ namespace ApplicationRobot
         {
             // Starts the timer from the current position in the route.
             moveTimer.Start();
+        }
+        public void CommencerNouvelItineraire(Point debut)
+        {
+            // Initialiser une nouvelle liste de points pour l'itinéraire
+            this.points.Clear();
+            this.points.Add(debut);
+        }
+
+        public void AjouterPointItineraire(Point point)
+        {
+            // Ajouter le point à l'itinéraire actuel
+            if (!this.points.Contains(point))
+            {
+                this.points.Add(point);
+            }
+        }
+
+        public void SauvegarderItineraire(List<Point> points, string nomItineraire)
+        {
+            string filePath = "@\"..\\..\\..\\..\\Historique\\itineraires.xml";
+            XElement root;
+
+            if (File.Exists(filePath))
+            {
+                root = XElement.Load(filePath);
+            }
+            else
+            {
+                root = new XElement("Itineraires");
+            }
+
+            int numeroItineraire = root.Elements("Itineraire").Count() + 1; // Déterminer le numéro du nouvel itinéraire
+            nomItineraire = Microsoft.VisualBasic.Interaction.InputBox("Entrez le nom de l'itinéraire :", "Nom de l'Itinéraire", "Itineraire X");
+            
+            if (!string.IsNullOrWhiteSpace(nomItineraire))
+            {
+                XElement itineraire = new XElement("Itineraire",
+                new XAttribute("Nom", nomItineraire),
+                new XAttribute("Date", DateTime.Now.ToString("yyyy-MM-dd")));
+
+                foreach (var point in points)
+                {
+                    itineraire.Add(new XElement("Point",
+                        new XAttribute("X", point.X),
+                        new XAttribute("Y", point.Y)));
+                }
+
+                root.Add(itineraire);
+                root.Save(filePath);
+            }
+            else
+            {
+               XElement itineraire = new XElement("Itineraire",
+               new XAttribute("Nom", $"Itineraire {numeroItineraire}"),
+               new XAttribute("Date", DateTime.Now.ToString("yyyy-MM-dd")));
+
+                foreach (var point in points)
+                {
+                    itineraire.Add(new XElement("Point",
+                        new XAttribute("X", point.X),
+                        new XAttribute("Y", point.Y)));
+                }
+
+                root.Add(itineraire);
+                root.Save(filePath);
+            }
+               
+
+            
         }
     }
 }

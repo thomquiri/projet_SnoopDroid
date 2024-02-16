@@ -9,8 +9,6 @@ namespace ApplicationRobot
     internal class Choice
     {
         private PictureBox pictureBox;
-        private Square square;
-        private PositionDisplayManager positionDisplayManager;
         private string selectedImagePath; // Pour stocker le chemin de l'image sélectionnée
         Size minimumSize = new Size(800, 800); // Taille minimum de pictureBoxMap1
         Size maximumSize = new Size(1000, 800); // Taille maximum, ajustez en fonction de la taille de l'écran et de l'espace nécessaire pour les autres UI

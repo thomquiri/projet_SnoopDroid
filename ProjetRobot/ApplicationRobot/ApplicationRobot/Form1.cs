@@ -10,6 +10,7 @@
 /// 
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -28,9 +29,12 @@ namespace ApplicationRobot
         private ItineraireAuto itineraireAuto;
         private Backroom backroom;
         private Choice choiceManager;
+        private Historique historique;
         private DateTime lastUpdateTime;
         private const int squareSize = 50; // Taille du carré
         private const int moveDistance = 10; // Distance de déplacement pour chaque clic
+        private bool isDrawing = false;
+        private bool modeLigneActif = false;
 
         public Form1()
         {
@@ -43,6 +47,7 @@ namespace ApplicationRobot
             square = new Square(pictureBoxMap1.Width / 2, pictureBoxMap1.Height / 2, squareSize, turnManager);
             DrawSquare();
             backroom = new Backroom();
+            historique = new Historique();
             choiceManager = new Choice(pictureBoxMap1);
             this.WindowState = FormWindowState.Maximized;
             joystick = new Joystick(pictureBoxJoystickBig, pictureBoxJoystickSmall);
@@ -54,7 +59,10 @@ namespace ApplicationRobot
             pictureBoxMap1.Paint += (sender, e) => itineraireAuto.Draw(e.Graphics);
 
             lastUpdateTime = DateTime.Now;
-            pictureBoxMap1.Paint += pictureBoxMap1_Paint; // Abonnement à l'événement Paint     
+            pictureBoxMap1.Paint += pictureBoxMap1_Paint; // Abonnement à l'événement Paint
+            pictureBoxMap1.MouseDown += pictureBoxMap1_MouseDown;
+            pictureBoxMap1.MouseMove += pictureBoxMap1_MouseMove;
+            pictureBoxMap1.MouseUp += pictureBoxMap1_MouseUp;
         }
 
         private void pictureBoxMap1_Paint(object? sender, PaintEventArgs e)
@@ -178,6 +186,36 @@ namespace ApplicationRobot
             buttonStartItin.Enabled = false;
             buttonStartItinBoucle.Enabled = false;
             buttonChoice.Enabled = false;
+            buttonMapLine.Enabled = false;
+
+            // Activer buttonAddPos et buttonCancel
+            buttonAddPos.Enabled = true;
+            buttonCancel.Enabled = true;
+            // Forcer le rafraîchissement pour assurer que les anciens dessins sont effacés
+            pictureBoxMap1.Invalidate(); // Marquer la zone de dessin comme invalide pour déclencher un événement Paint
+            pictureBoxMap1.Update(); // Forcer l'exécution immédiate de l'événement Paint
+        }
+        private void buttonMapLine_Click(object sender, EventArgs e)
+        {
+            itineraireAuto = new ItineraireAuto(pictureBoxMap1, square, this);
+            modeLigneActif = true;
+
+            itineraireAuto.ResetPoints();
+            pictureBoxMap1.Refresh();
+            itineraireAuto.EnablePointAdding(true);
+            buttonAddPos.Show();
+
+            buttonUp.Enabled = false;
+            buttonDown.Enabled = false;
+            buttonLeft.Enabled = false;
+            buttonRight.Enabled = false;
+            buttonTurnLeft.Enabled = false;
+            buttonTurnRight.Enabled = false;
+            buttonMapClick.Enabled = false;
+            buttonStartItin.Enabled = false;
+            buttonStartItinBoucle.Enabled = false;
+            buttonChoice.Enabled = false;
+            buttonMapClick.Enabled = false;
 
             // Activer buttonAddPos et buttonCancel
             buttonAddPos.Enabled = true;
@@ -189,6 +227,7 @@ namespace ApplicationRobot
 
         private void buttonAddPos_Click(object sender, EventArgs e)
         {
+            modeLigneActif = false;
             itineraireAuto.EnablePointAdding(false);
             buttonStartItin.Show();
             buttonStartItinBoucle.Show();
@@ -196,6 +235,8 @@ namespace ApplicationRobot
             buttonItinPlay.Show();
             buttonStartItin.Enabled = true;
             buttonStartItinBoucle.Enabled = true;
+
+            itineraireAuto.SauvegarderItineraire(itineraireAuto.GetPoints(), $"Itineraire {DateTime.Now.ToString("yyyyMMddHHmmss")}");
         }
 
         private void buttonStartItin_Click(object sender, EventArgs e)
@@ -216,6 +257,8 @@ namespace ApplicationRobot
             // Annuler l'action en cours
             itineraireAuto.CancelAdding();
             itineraireAuto.EnablePointAdding(false);
+            modeLigneActif = false;
+
             //joystickTimer?.Stop();  // Par exemple, si vous utilisez un Timer pour le déplacement
             buttonMapClick.Enabled = true;
 
@@ -237,6 +280,8 @@ namespace ApplicationRobot
             buttonStartItinBoucle.Enabled = true;
             buttonCancel.Enabled = true;
             buttonChoice.Enabled = true;
+            buttonHistorique.Enabled = true;
+            buttonMapLine.Enabled = true;
             buttonAddPos.Enabled = false;
         }
 
@@ -253,6 +298,8 @@ namespace ApplicationRobot
             buttonCancel.Enabled = false;
             buttonAddPos.Enabled = false;
             buttonMapClick.Enabled = false;
+            buttonHistorique.Enabled = false;
+            buttonMapLine.Enabled = false;
             buttonChoice.Enabled = true;
         }
         public void UpdateLoopCounterLabel(int loopCounter)
@@ -297,6 +344,41 @@ namespace ApplicationRobot
             else
             {
                 panelControl.Visible = true;
+            }
+        }
+
+        private void buttonHistorique_Click(object sender, EventArgs e)
+        {
+            historique.AfficherHistorique(itineraireAuto);
+            buttonStartItin.Show();
+            buttonStartItinBoucle.Show();
+            buttonItinPause.Show();
+            buttonItinPlay.Show();
+        }
+        private void pictureBoxMap1_MouseDown(object? sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && modeLigneActif)
+            {
+                isDrawing = true;
+                itineraireAuto.CommencerNouvelItineraire(e.Location);
+            }
+        }
+
+        private void pictureBoxMap1_MouseMove(object? sender, MouseEventArgs e)
+        {
+            if (isDrawing && modeLigneActif)
+            {
+                itineraireAuto.AjouterPointItineraire(e.Location);
+                pictureBoxMap1.Invalidate(); // Redessiner si nécessaire
+            }
+        }
+
+        private void pictureBoxMap1_MouseUp(object? sender, MouseEventArgs e)
+        {
+            if (isDrawing && modeLigneActif)
+            {
+                isDrawing = false;
+                modeLigneActif = false; // Optionnellement désactiver le mode après avoir dessiné une ligne
             }
         }
     }
