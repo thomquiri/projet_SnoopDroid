@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "JfWHThlvVifNfLBOLfSLhpuLLMZg3FXm8jYDDxOZhGwlOw2/W9VC2z0bOqmZ4j+AL+ZHwhgGrKWWrCMxEct5WQ==",
+  "success": true,
+  "projectFilePath": "D:\\Étude BTS 2ème année 2023 - 2024\\ProjetRobot\\ApplicationRobot\\ApplicationRobot\\ApplicationRobot.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kschouler1\\.nuget\\packages\\ppy.sdl2-cs\\1.0.82\\ppy.sdl2-cs.1.0.82.nupkg.sha512"
+  ],
+  "logs": []
+}
