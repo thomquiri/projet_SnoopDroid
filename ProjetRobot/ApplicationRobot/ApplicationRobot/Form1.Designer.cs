@@ -53,6 +53,8 @@
             panelControl = new Panel();
             buttonHistorique = new Button();
             buttonMapLine = new Button();
+            buttonConnect = new Button();
+            buttonDisconnect = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBoxMap1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickBig).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickSmall).BeginInit();
@@ -111,12 +113,11 @@
             // labelPosition
             // 
             labelPosition.AutoSize = true;
-            labelPosition.Location = new Point(1623, 348);
+            labelPosition.Location = new Point(1116, 349);
             labelPosition.Name = "labelPosition";
             labelPosition.Size = new Size(100, 15);
             labelPosition.TabIndex = 5;
             labelPosition.Text = "Position actuelle :";
-            labelPosition.Click += labelPosition_Click;
             // 
             // buttonTurnLeft
             // 
@@ -170,9 +171,9 @@
             // 
             // buttonMapClick
             // 
-            buttonMapClick.Location = new Point(1623, 483);
+            buttonMapClick.Location = new Point(1242, 425);
             buttonMapClick.Name = "buttonMapClick";
-            buttonMapClick.Size = new Size(111, 43);
+            buttonMapClick.Size = new Size(108, 43);
             buttonMapClick.TabIndex = 11;
             buttonMapClick.Text = "Placer un ou plusieurs points";
             buttonMapClick.UseVisualStyleBackColor = true;
@@ -180,7 +181,7 @@
             // 
             // buttonAddPos
             // 
-            buttonAddPos.Location = new Point(1749, 483);
+            buttonAddPos.Location = new Point(1242, 484);
             buttonAddPos.Name = "buttonAddPos";
             buttonAddPos.Size = new Size(108, 43);
             buttonAddPos.TabIndex = 12;
@@ -191,7 +192,7 @@
             // 
             // buttonStartItin
             // 
-            buttonStartItin.Location = new Point(1749, 542);
+            buttonStartItin.Location = new Point(1245, 584);
             buttonStartItin.Name = "buttonStartItin";
             buttonStartItin.Size = new Size(108, 43);
             buttonStartItin.TabIndex = 13;
@@ -202,9 +203,9 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.Location = new Point(1764, 743);
+            buttonCancel.Location = new Point(1245, 810);
             buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(111, 39);
+            buttonCancel.Size = new Size(108, 39);
             buttonCancel.TabIndex = 14;
             buttonCancel.Text = "Annuler";
             buttonCancel.UseVisualStyleBackColor = true;
@@ -212,7 +213,7 @@
             // 
             // buttonStartItinBoucle
             // 
-            buttonStartItinBoucle.Location = new Point(1623, 542);
+            buttonStartItinBoucle.Location = new Point(1119, 584);
             buttonStartItinBoucle.Name = "buttonStartItinBoucle";
             buttonStartItinBoucle.Size = new Size(111, 43);
             buttonStartItinBoucle.TabIndex = 15;
@@ -224,7 +225,7 @@
             // labelLoopCounter
             // 
             labelLoopCounter.AutoSize = true;
-            labelLoopCounter.Location = new Point(1623, 375);
+            labelLoopCounter.Location = new Point(1116, 376);
             labelLoopCounter.Name = "labelLoopCounter";
             labelLoopCounter.Size = new Size(107, 15);
             labelLoopCounter.TabIndex = 16;
@@ -233,9 +234,9 @@
             // 
             // buttonChoice
             // 
-            buttonChoice.Location = new Point(1628, 743);
+            buttonChoice.Location = new Point(1245, 729);
             buttonChoice.Name = "buttonChoice";
-            buttonChoice.Size = new Size(111, 39);
+            buttonChoice.Size = new Size(108, 43);
             buttonChoice.TabIndex = 17;
             buttonChoice.Text = "Choisir un plan";
             buttonChoice.UseVisualStyleBackColor = true;
@@ -243,7 +244,7 @@
             // 
             // buttonItinPause
             // 
-            buttonItinPause.Location = new Point(1623, 602);
+            buttonItinPause.Location = new Point(1119, 644);
             buttonItinPause.Name = "buttonItinPause";
             buttonItinPause.Size = new Size(111, 43);
             buttonItinPause.TabIndex = 18;
@@ -254,7 +255,7 @@
             // 
             // buttonItinPlay
             // 
-            buttonItinPlay.Location = new Point(1749, 602);
+            buttonItinPlay.Location = new Point(1245, 644);
             buttonItinPlay.Name = "buttonItinPlay";
             buttonItinPlay.Size = new Size(108, 43);
             buttonItinPlay.TabIndex = 19;
@@ -265,7 +266,7 @@
             // 
             // buttonShowControls
             // 
-            buttonShowControls.Location = new Point(1749, 269);
+            buttonShowControls.Location = new Point(1242, 270);
             buttonShowControls.Name = "buttonShowControls";
             buttonShowControls.Size = new Size(123, 63);
             buttonShowControls.TabIndex = 20;
@@ -282,14 +283,15 @@
             panelControl.Controls.Add(buttonRight);
             panelControl.Controls.Add(buttonTurnRight);
             panelControl.Controls.Add(panel1);
-            panelControl.Location = new Point(1619, 12);
+            panelControl.Location = new Point(1112, 13);
             panelControl.Name = "panelControl";
             panelControl.Size = new Size(273, 251);
             panelControl.TabIndex = 21;
+            panelControl.Visible = false;
             // 
             // buttonHistorique
             // 
-            buttonHistorique.Location = new Point(1628, 683);
+            buttonHistorique.Location = new Point(1119, 729);
             buttonHistorique.Name = "buttonHistorique";
             buttonHistorique.Size = new Size(111, 43);
             buttonHistorique.TabIndex = 22;
@@ -299,7 +301,7 @@
             // 
             // buttonMapLine
             // 
-            buttonMapLine.Location = new Point(1622, 424);
+            buttonMapLine.Location = new Point(1115, 425);
             buttonMapLine.Name = "buttonMapLine";
             buttonMapLine.Size = new Size(111, 43);
             buttonMapLine.TabIndex = 23;
@@ -307,11 +309,32 @@
             buttonMapLine.UseVisualStyleBackColor = true;
             buttonMapLine.Click += buttonMapLine_Click;
             // 
+            // buttonConnect
+            // 
+            buttonConnect.Location = new Point(896, 729);
+            buttonConnect.Name = "buttonConnect";
+            buttonConnect.Size = new Size(112, 43);
+            buttonConnect.TabIndex = 24;
+            buttonConnect.Text = "Se connecter à un robot";
+            buttonConnect.UseVisualStyleBackColor = true;
+            buttonConnect.Click += buttonConnect_Click;
+            // 
+            // buttonDisconnect
+            // 
+            buttonDisconnect.Location = new Point(896, 791);
+            buttonDisconnect.Name = "buttonDisconnect";
+            buttonDisconnect.Size = new Size(112, 43);
+            buttonDisconnect.TabIndex = 25;
+            buttonDisconnect.Text = "Se déconnecter";
+            buttonDisconnect.UseVisualStyleBackColor = true;
+            buttonDisconnect.Click += buttonDisconnect_Click;
+            // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1904, 1041);
+            AutoScaleMode = AutoScaleMode.None;
+            ClientSize = new Size(1396, 861);
+            Controls.Add(buttonDisconnect);
+            Controls.Add(buttonConnect);
             Controls.Add(buttonMapLine);
             Controls.Add(buttonHistorique);
             Controls.Add(panelControl);
@@ -364,5 +387,7 @@
         private Panel panelControl;
         private Button buttonHistorique;
         private Button buttonMapLine;
+        private Button buttonConnect;
+        private Button buttonDisconnect;
     }
 }

@@ -191,11 +191,18 @@ namespace ApplicationRobot
 
         public void AjouterPointItineraire(Point point)
         {
-            // Ajouter le point à l'itinéraire actuel
-            if (!this.points.Contains(point))
+            if (points.Count > 0)
             {
-                this.points.Add(point);
+                var lastPoint = points.Last();
+                if (Math.Sqrt(Math.Pow(lastPoint.X - point.X, 2) + Math.Pow(lastPoint.Y - point.Y, 2)) < 10)
+                {
+                    // The point is too close to the last point, so don't add it
+                    return;
+                }
             }
+
+            this.points.Add(point);
+            this.pictureBox.Invalidate(); // Redraw the PictureBox to show the new point
         }
 
         public void SauvegarderItineraire(List<Point> points, string nomItineraire)

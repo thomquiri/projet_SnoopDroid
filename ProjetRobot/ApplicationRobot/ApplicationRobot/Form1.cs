@@ -30,6 +30,7 @@ namespace ApplicationRobot
         private Backroom backroom;
         private Choice choiceManager;
         private Historique historique;
+        private ControlPacketSender controlPacketSender;
         private DateTime lastUpdateTime;
         private const int squareSize = 50; // Taille du carré
         private const int moveDistance = 10; // Distance de déplacement pour chaque clic
@@ -51,6 +52,7 @@ namespace ApplicationRobot
             choiceManager = new Choice(pictureBoxMap1);
             this.WindowState = FormWindowState.Maximized;
             joystick = new Joystick(pictureBoxJoystickBig, pictureBoxJoystickSmall);
+            joystick.JoystickValueChanged += joystick.OnJoystickValueChanged;
             joystickTimer = new Timer();
             joystickTimer.Interval = 20; // Interval en millisecondes
             joystickTimer.Tick += JoystickTimer_Tick;
@@ -63,6 +65,9 @@ namespace ApplicationRobot
             pictureBoxMap1.MouseDown += pictureBoxMap1_MouseDown;
             pictureBoxMap1.MouseMove += pictureBoxMap1_MouseMove;
             pictureBoxMap1.MouseUp += pictureBoxMap1_MouseUp;
+
+            controlPacketSender = new ControlPacketSender();
+            joystick.InitializeControlPacketSender(controlPacketSender);
         }
 
         private void pictureBoxMap1_Paint(object? sender, PaintEventArgs e)
@@ -146,13 +151,13 @@ namespace ApplicationRobot
         }
         private void buttonTurnRight_Click(object sender, EventArgs e)
         {
-            turnManager.TurnRight(15); // Tourner de 10 degrés vers la droite
+            turnManager.TurnRight(30); // Tourner de 10 degrés vers la droite
             DrawSquare();
         }
 
         private void buttonTurnLeft_Click(object sender, EventArgs e)
         {
-            turnManager.TurnLeft(15); // Tourner de 10 degrés vers la gauche
+            turnManager.TurnLeft(30); // Tourner de 10 degrés vers la gauche
             DrawSquare();
         }
 
@@ -162,10 +167,6 @@ namespace ApplicationRobot
             positionDisplayManager.UpdatePosition(square.X, square.Y);
         }
 
-        private void labelPosition_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void buttonMapClick_Click(object sender, EventArgs e)
         {
@@ -380,6 +381,19 @@ namespace ApplicationRobot
                 isDrawing = false;
                 modeLigneActif = false; // Optionnellement désactiver le mode après avoir dessiné une ligne
             }
+        }
+
+        private void buttonConnect_Click(object sender, EventArgs e)
+        {
+            string ipAddress = "10.129.20.130"; // Remplacez par l'adresse IP réelle
+            int port = 2222; // Remplacez par le port réel
+            string password = "mot_de_passe"; // Remplacez par le mot de passe réel
+            controlPacketSender.Connect(ipAddress, port, password);
+        }
+
+        private void buttonDisconnect_Click(object sender, EventArgs e)
+        {
+            controlPacketSender.Close();
         }
     }
 }

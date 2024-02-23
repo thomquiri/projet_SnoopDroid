@@ -10,8 +10,8 @@ namespace ApplicationRobot
     {
         private PictureBox pictureBox;
         private string selectedImagePath; // Pour stocker le chemin de l'image sélectionnée
-        Size minimumSize = new Size(800, 800); // Taille minimum de pictureBoxMap1
-        Size maximumSize = new Size(1000, 800); // Taille maximum, ajustez en fonction de la taille de l'écran et de l'espace nécessaire pour les autres UI
+        Size minimumSize = new Size (500, 500); // Taille minimum de pictureBoxMap1
+        Size maximumSize = new Size(800, 800); // Taille maximum, ajustez en fonction de la taille de l'écran et de l'espace nécessaire pour les autres UI
 
         public Choice(PictureBox pictureBox)
         {
