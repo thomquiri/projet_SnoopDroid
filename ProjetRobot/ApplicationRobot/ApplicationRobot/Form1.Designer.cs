@@ -55,6 +55,7 @@
             buttonMapLine = new Button();
             buttonConnect = new Button();
             buttonDisconnect = new Button();
+            labelPing = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBoxMap1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickBig).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxJoystickSmall).BeginInit();
@@ -230,7 +231,6 @@
             labelLoopCounter.Size = new Size(107, 15);
             labelLoopCounter.TabIndex = 16;
             labelLoopCounter.Text = "Nombre de tour : 0";
-            labelLoopCounter.Click += labelLoopCounter_Click;
             // 
             // buttonChoice
             // 
@@ -329,10 +329,20 @@
             buttonDisconnect.UseVisualStyleBackColor = true;
             buttonDisconnect.Click += buttonDisconnect_Click;
             // 
+            // labelPing
+            // 
+            labelPing.AutoSize = true;
+            labelPing.Location = new Point(896, 691);
+            labelPing.Name = "labelPing";
+            labelPing.Size = new Size(37, 15);
+            labelPing.TabIndex = 26;
+            labelPing.Text = "Ping :";
+            // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(1396, 861);
+            Controls.Add(labelPing);
             Controls.Add(buttonDisconnect);
             Controls.Add(buttonConnect);
             Controls.Add(buttonMapLine);
@@ -389,5 +399,6 @@
         private Button buttonMapLine;
         private Button buttonConnect;
         private Button buttonDisconnect;
+        private Label labelPing;
     }
 }

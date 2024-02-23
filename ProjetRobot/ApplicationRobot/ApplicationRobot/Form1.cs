@@ -283,6 +283,9 @@ namespace ApplicationRobot
             buttonChoice.Enabled = true;
             buttonHistorique.Enabled = true;
             buttonMapLine.Enabled = true;
+            buttonConnect.Enabled = true;
+            buttonDisconnect.Enabled = true;
+            buttonShowControls.Enabled = true;
             buttonAddPos.Enabled = false;
         }
 
@@ -302,6 +305,11 @@ namespace ApplicationRobot
             buttonHistorique.Enabled = false;
             buttonMapLine.Enabled = false;
             buttonChoice.Enabled = true;
+            buttonHistorique.Enabled = false;
+            buttonMapLine.Enabled = false;
+            buttonConnect.Enabled = false;
+            buttonDisconnect.Enabled = false;
+            buttonShowControls.Enabled = false;
         }
         public void UpdateLoopCounterLabel(int loopCounter)
         {
@@ -313,10 +321,6 @@ namespace ApplicationRobot
             {
                 labelLoopCounter.Text = $"Nombre de tour : {loopCounter}";
             }
-        }
-        private void labelLoopCounter_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void buttonChoice_Click(object sender, EventArgs e)
@@ -388,7 +392,7 @@ namespace ApplicationRobot
             string ipAddress = "10.129.20.130"; // Remplacez par l'adresse IP réelle
             int port = 2222; // Remplacez par le port réel
             string password = "mot_de_passe"; // Remplacez par le mot de passe réel
-            controlPacketSender.Connect(ipAddress, port, password);
+            controlPacketSender.Connect(ipAddress, port, password, labelPing);
         }
 
         private void buttonDisconnect_Click(object sender, EventArgs e)

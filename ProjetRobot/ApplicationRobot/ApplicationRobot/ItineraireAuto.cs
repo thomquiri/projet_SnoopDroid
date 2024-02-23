@@ -35,6 +35,7 @@ namespace ApplicationRobot
         private int currentPointIndex = 0;
         private const int moveInterval = 20; // Millisecondes
         private bool loopMode = false; // Pour suivre si le mode boucle est activé
+        private bool LigneMode = false;
 
         public ItineraireAuto(PictureBox pictureBox, Square square, Form1 form)
         {
@@ -57,21 +58,27 @@ namespace ApplicationRobot
         }
         public void EnablePointAdding(bool enable)
         {
-            if (enable)
+            if (LigneMode == false)
             {
-                pictureBox.MouseClick += PictureBox_MouseClick;
-            }
-            else
-            {
-                pictureBox.MouseClick -= PictureBox_MouseClick;
+                if (enable)
+                {
+                    pictureBox.MouseClick += PictureBox_MouseClick;
+                }
+                else
+                {
+                    pictureBox.MouseClick -= PictureBox_MouseClick;
+                }
             }
         }
 
         private void PictureBox_MouseClick(object? sender, MouseEventArgs e)
         {
-            // Ajouter le point où l'utilisateur a cliqué
-            points.Add(e.Location);
-            pictureBox.Invalidate(); // Demander le redessin de la PictureBox
+            if (LigneMode == false) 
+            { 
+                // Ajouter le point où l'utilisateur a cliqué
+                points.Add(e.Location);
+                pictureBox.Invalidate(); // Demander le redessin de la PictureBox
+            }
         }
 
         public void StartMoving(bool loop = false)
@@ -165,6 +172,7 @@ namespace ApplicationRobot
             // Annuler l'ajout de points
             EnablePointAdding(false);
             loopMode = false;
+            LigneMode = false;
 
             moveTimer?.Stop();
             // Vous pouvez également effacer la liste de points si nécessaire
@@ -191,6 +199,7 @@ namespace ApplicationRobot
 
         public void AjouterPointItineraire(Point point)
         {
+            LigneMode = true;
             if (points.Count > 0)
             {
                 var lastPoint = points.Last();
@@ -207,6 +216,7 @@ namespace ApplicationRobot
 
         public void SauvegarderItineraire(List<Point> points, string nomItineraire)
         {
+            LigneMode = false;
             string filePath = "@\"..\\..\\..\\..\\Historique\\itineraires.xml";
             XElement root;
 
@@ -254,9 +264,6 @@ namespace ApplicationRobot
                 root.Add(itineraire);
                 root.Save(filePath);
             }
-               
-
-            
         }
     }
 }

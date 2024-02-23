@@ -16,11 +16,11 @@ namespace ApplicationRobot
 {
     internal class Backroom
     {
-        private readonly string imagePath = @"..\..\..\..\image\backrooms.png"; // Chemin vers votre image
+        private readonly string imagePath = @"..\..\..\..\image\Baba2.png"; // Chemin vers votre image
         private bool flagOn;
         public void CheckSquarePosition(Square square)
         {
-            if (square.X < -10000 || square.X > 10000 || square.Y < -10000 || square.Y > 10000)
+            if (square.X < -1000 || square.X > 2000 || square.Y < -1000 || square.Y > 2000)
             {
                 ShowPopup();
             }

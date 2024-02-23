@@ -11,13 +11,14 @@ namespace ApplicationRobot
     {
         private TcpClient? client;
         private NetworkStream? stream;
+        private Dictionary<int, long> pingSentTimestamps = new Dictionary<int, long>();
 
         public ControlPacketSender()
         {
 
         }
 
-        public void Connect(string ipAddress, int port, string mot_de_passe)
+        public void Connect(string ipAddress, int port, string mot_de_passe, Label labelPing)
         {
             try
             {
@@ -25,6 +26,10 @@ namespace ApplicationRobot
                 stream = client.GetStream();
                 byte[] passwordBytes = Encoding.ASCII.GetBytes(mot_de_passe);
                 stream.Write(passwordBytes, 0, passwordBytes.Length);
+                pingLoop(1000);
+                ListenForPingCallback(labelPing);
+                Task.Run(async () => await pingLoop(1000)); // Exécute pingLoop dans une tâche séparée
+                Task.Run(async () => await ListenForPingCallback(labelPing)); // Idem pour ListenForPingCallback
             }
             catch 
             {
@@ -40,6 +45,75 @@ namespace ApplicationRobot
             return unixTimeInNanoseconds;
         }
 
+        public async Task pingLoop(int delayMs)
+        {
+            int id = 0;
+            while (true) 
+            { 
+                SendPing(id);
+                MessageBox.Show("feur");
+                id++;
+                await Task.Delay(delayMs);
+            }
+        }
+
+        public void SendPing(int identifier)
+        {
+            if (!IsConnected())
+            {
+                this.Close();
+                return;
+            }
+            byte[] packet = new byte[5];
+            Buffer.BlockCopy(Encoding.ASCII.GetBytes("P"), 0, packet, 0, 1);
+            Buffer.BlockCopy(BitConverter.GetBytes(identifier), 0, packet, 1, 4);
+            // Convert the packet to a hex string for display
+            string packetHexString = BitConverter.ToString(packet).Replace("-", " ");
+            pingSentTimestamps[identifier] = GetCurrentUnixTimestamp(); // Store the send timestamp
+            stream.Write(packet, 0, packet.Length);
+        }
+
+        public async Task ListenForPingCallback(Label labelPing)
+        {
+            try
+            {
+                if (stream == null || !IsConnected()) return;
+
+                byte[] buffer = new byte[5]; // Buffer for the current message
+                int bytesReadTotal = 0; // Total bytes read for the current message
+
+                while (true)
+                {
+                    int bytesRead = await stream.ReadAsync(buffer, bytesReadTotal, buffer.Length - bytesReadTotal);
+                    bytesReadTotal += bytesRead;
+
+                    if (bytesReadTotal == buffer.Length) // Check if we've got the complete message
+                    {
+                        if (Encoding.ASCII.GetString(buffer, 0, 1) == "P")
+                        {
+                            int identifier = BitConverter.ToInt32(buffer, 1);
+                            long receivedTimestamp = GetCurrentUnixTimestamp();
+
+                            if (pingSentTimestamps.TryGetValue(identifier, out long sentTimestamp))
+                            {
+                                long pingTime = receivedTimestamp - sentTimestamp; // Calculate ping time
+                                long pingTimeMs = pingTime / 1000000;
+                                // Make sure to update UI elements on the UI thread
+                                labelPing.Invoke((MethodInvoker)(() => labelPing.Text = $"Ping: {pingTimeMs} ms"));
+                                pingSentTimestamps.Remove(identifier); // Clean up the entry
+                            }
+                        }
+                        bytesReadTotal = 0; // Reset for the next message
+                    }
+                }
+            }
+            catch  (Exception ex)
+            {
+                MessageBox.Show($"La connexion est terminé.");
+                this.Close();
+            }
+        }
+
         public void SendJoystickUpdate(float x, float y)
         {
             if (!IsConnected()) 
@@ -47,11 +121,12 @@ namespace ApplicationRobot
                 this.Close();
                 return;
             }
-                byte[] packet = new byte[16];
-                Buffer.BlockCopy(BitConverter.GetBytes(x), 0, packet, 0, 4);
-                Buffer.BlockCopy(BitConverter.GetBytes(y), 0, packet, 4, 4);
-                Buffer.BlockCopy(BitConverter.GetBytes(this.GetCurrentUnixTimestamp()), 0, packet, 8, 8);
-                stream.Write(packet, 0, packet.Length);
+            byte[] packet = new byte[17];
+            Buffer.BlockCopy(Encoding.ASCII.GetBytes("J"), 0, packet, 0, 1);
+            Buffer.BlockCopy(BitConverter.GetBytes(x), 0, packet, 1, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(y), 0, packet, 5, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(this.GetCurrentUnixTimestamp()), 0, packet, 9, 8);
+            stream.Write(packet, 0, packet.Length);
         }
 
         public void SendButtonUpdate(byte keyId, bool pressed)
