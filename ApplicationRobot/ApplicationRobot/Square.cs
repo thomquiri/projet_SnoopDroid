@@ -1,4 +1,14 @@
-﻿using System;
+﻿/// La classe Square représente un carré dans l'application et gère son positionnement et ses mouvements.
+/// 
+/// Cette classe fournit des méthodes pour déplacer le carré dans l'espace 2D, en tenant compte de divers facteurs tels que :
+/// - Les angles de rotation, gérés par une instance de la classe Turn.
+/// - Les déplacements déclenchés par un joystick virtuel, en tenant compte de l'angle et de la magnitude du mouvement.
+/// - La gestion des limites de déplacement pour éviter que le carré ne sorte de l'aire de jeu définie.
+/// La classe maintient également une instance de Backroom pour des interactions spécifiques non détaillées ici.
+/// 
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +21,7 @@ namespace ApplicationRobot
         public int X { get; set; }
         public int Y { get; set; }
         public int Size { get; set; }
-        private Turn turnManager;
+        public Turn turnManager;
         private Backroom backroom;
 
 

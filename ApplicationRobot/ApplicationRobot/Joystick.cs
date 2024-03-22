@@ -1,6 +1,18 @@
-﻿using System;
+﻿/// La classe Joystick simule un joystick virtuel en utilisant deux PictureBox : une pour le joystick lui-même et l'autre pour sa base.
+/// Elle permet de traduire les mouvements de la souris en déplacements du joystick virtuel et calcule l'angle et la magnitude du mouvement.
+/// 
+/// Caractéristiques principales :
+/// - Gestion des interactions utilisateur : Clic et déplacement de la souris sont traduits en mouvements du joystick.
+/// - Limitation des mouvements : Les déplacements du joystick sont limités à une zone circulaire définie par MaxRadius.
+/// - Deadzone : Un seuil minimal de mouvement (Deadzone) est appliqué pour éviter les mouvements involontaires.
+/// - Calcul de direction : La classe fournit des méthodes pour obtenir l'angle et la magnitude du mouvement du joystick, 
+///   permettant ainsi une interaction précise et intuitive avec d'autres composants de l'application.
+/// 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,14 +20,22 @@ namespace ApplicationRobot
 {
     internal class Joystick
     {
+        public delegate void JoystickValueChangedEventHandler(float angle, float magnitude);
+        public event JoystickValueChangedEventHandler JoystickValueChanged;
         private PictureBox pictureBoxJoystickBig;
         private PictureBox pictureBoxJoystickSmall;
+        private ControlPacketSender? controlPacketSender = null;
+
         private bool isDragging = false;
         private Point dragCursorPoint;
         private Point dragPictureBoxPoint;
         private const float MaxRadius = 50.0f; // Rayon maximum du joystick
         private const float Deadzone = 10.0f; // Ajustez la valeur de la deadzone selon les besoins
 
+        public void InitializeControlPacketSender(ControlPacketSender com)
+        {
+            controlPacketSender = com;
+        }
         public void CenterJoystickSmall()
         {
             // Positionner le joystick small au centre du joystick big
@@ -74,8 +94,12 @@ namespace ApplicationRobot
                         center.Y + (int)((newLocation.Y - center.Y) * ratio)
                     );
                 }
-
                 pictureBoxJoystickSmall.Location = newLocation;
+                var (angle, magnitude) = GetDirection();
+                if (magnitude > Deadzone)
+                {
+                    JoystickValueChanged?.Invoke(angle, magnitude);
+                }
             }
         }
 
@@ -89,6 +113,17 @@ namespace ApplicationRobot
                 (pictureBoxJoystickBig.Width - pictureBoxJoystickSmall.Width) / 2,
                 (pictureBoxJoystickBig.Height - pictureBoxJoystickSmall.Height) / 2
             );
+            var (angle, magnitude) = GetDirection();
+            float x = (float)(magnitude * Math.Cos(angle)); // Cast double to float
+            float y = (float)(magnitude * Math.Sin(angle)); // Cast double to float
+            JoystickValueChanged?.Invoke(angle, magnitude);
+
+            // Send the coordinates
+            if (controlPacketSender != null)
+            {
+                controlPacketSender.SendJoystickUpdate(x, y);
+            }
+
         }
 
         // Méthode pour obtenir la direction du joystick
@@ -118,6 +153,33 @@ namespace ApplicationRobot
             var (angle, magnitude) = GetDirection(); // Décomposer le tuple
 
             return angle; // Renvoyer l'angle
+        }
+        public void SendJoystickData(float x, float y)
+        {
+            // Implementation to send data to the robot
+        }
+
+        public void OnJoystickValueChanged(float angle, float magnitude)
+        {
+            // Normalize the magnitude to a range of 0 to 1
+            float normalizedMagnitude = magnitude / 49.0f;
+
+            // Convert angle from radians to degrees if necessary for readability (optional)
+            // float angleInDegrees = angle * (180 / (float)Math.PI);
+
+            // Calculate x and y coordinates with the normalized magnitude
+            float x = normalizedMagnitude * (float)Math.Cos(angle); // Cosine for x
+            float y = normalizedMagnitude * (float)Math.Sin(angle); // Sine for y
+
+            // Ensure x and y are within the range of -1 to 1
+            x = Math.Clamp(x, -1.0f, 1.0f);
+            y = Math.Clamp(y, -1.0f, 1.0f);
+
+            // Assuming you want to display these values on a UI, or send them to a robot
+            Console.WriteLine($"Joystick X: {x}, Y: {y}");
+
+            // Send the x and y coordinates instead of angle and magnitude
+            controlPacketSender?.SendJoystickUpdate(x, y);
         }
     }
 }

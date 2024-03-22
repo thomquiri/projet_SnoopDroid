@@ -74,11 +74,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Étude BTS 2ème année 2023 - 2024\\ProjetRobot\\backup\\ApplicationRobot\\ApplicationRobot\\ApplicationRobot.csproj",
+      "projectUniqueName": "D:\\Étude BTS 2ème année 2023 - 2024\\ProjetRobot\\ApplicationRobot\\ApplicationRobot\\ApplicationRobot.csproj",
       "projectName": "ApplicationRobot",
-      "projectPath": "D:\\Étude BTS 2ème année 2023 - 2024\\ProjetRobot\\backup\\ApplicationRobot\\ApplicationRobot\\ApplicationRobot.csproj",
+      "projectPath": "D:\\Étude BTS 2ème année 2023 - 2024\\ProjetRobot\\ApplicationRobot\\ApplicationRobot\\ApplicationRobot.csproj",
       "packagesPath": "C:\\Users\\kschouler1\\.nuget\\packages\\",
-      "outputPath": "D:\\Étude BTS 2ème année 2023 - 2024\\ProjetRobot\\backup\\ApplicationRobot\\ApplicationRobot\\obj\\",
+      "outputPath": "D:\\Étude BTS 2ème année 2023 - 2024\\ProjetRobot\\ApplicationRobot\\ApplicationRobot\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kschouler1\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -131,7 +131,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

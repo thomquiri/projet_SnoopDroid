@@ -1,4 +1,16 @@
-﻿using System;
+﻿/// La classe ItineraireAuto gère un itinéraire automatique pour un objet Square dans une application de simulation de mouvement.
+/// Elle permet d'ajouter des points de passage, de déplacer le carré à travers ces points et de gérer un mode de déplacement en boucle.
+/// 
+/// Fonctionnalités principales :
+/// - Ajout de Points : Permet aux utilisateurs d'ajouter des points de passage en cliquant sur la PictureBox.
+/// - Déplacement Automatique : Déplace le carré automatiquement d'un point à l'autre en suivant l'itinéraire défini.
+/// - Mode Boucle : Offre la possibilité de faire tourner le carré en boucle sur l'itinéraire défini, avec un compteur de boucles.
+/// - Gestion de la Vitesse : Contrôle la vitesse de déplacement du carré pour assurer un mouvement fluide et constant.
+/// - Affichage de l'Itinéraire : Dessine visuellement l'itinéraire et les points sur la PictureBox pour une meilleure compréhension de la trajectoire.
+/// - Réinitialisation et Annulation : Offre des méthodes pour réinitialiser l'itinéraire, annuler l'ajout de points et arrêter le déplacement automatique.
+/// 
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -6,6 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Timer = System.Windows.Forms.Timer;
+using System.Xml.Linq;
+using System.IO;
+using Microsoft.VisualBasic;
 
 namespace ApplicationRobot
 {
@@ -14,39 +29,57 @@ namespace ApplicationRobot
         private List<Point> points = new List<Point>();
         private PictureBox pictureBox;
         private Square square;
+        private Form1 form;
+        private Turn? turn;
+        private int loopCounter = 0;
         private Timer moveTimer;
         private int currentPointIndex = 0;
         private const int moveInterval = 20; // Millisecondes
         private bool loopMode = false; // Pour suivre si le mode boucle est activé
+        private bool LigneMode = false;
 
-        public ItineraireAuto(PictureBox pictureBox, Square square)
+        public ItineraireAuto(PictureBox pictureBox, Square square, Form1 form)
         {
             this.pictureBox = pictureBox;
             this.square = square;
+            this.form = form;
 
             // Initialiser le Timer pour le déplacement du carré
             moveTimer = new Timer();
             moveTimer.Interval = moveInterval;
             moveTimer.Tick += MoveTimer_Tick;
         }
-
+        public List<Point> GetPoints()
+        {
+            return new List<Point>(this.points);
+        }
+        public int LoopCounter
+        {
+            get { return loopCounter; }
+        }
         public void EnablePointAdding(bool enable)
         {
-            if (enable)
+            if (LigneMode == false)
             {
-                pictureBox.MouseClick += PictureBox_MouseClick;
-            }
-            else
-            {
-                pictureBox.MouseClick -= PictureBox_MouseClick;
+                if (enable)
+                {
+                    pictureBox.MouseClick += PictureBox_MouseClick;
+                }
+                else
+                {
+                    pictureBox.MouseClick -= PictureBox_MouseClick;
+                }
             }
         }
 
         private void PictureBox_MouseClick(object? sender, MouseEventArgs e)
         {
-            // Ajouter le point où l'utilisateur a cliqué
-            points.Add(e.Location);
-            pictureBox.Invalidate(); // Demander le redessin de la PictureBox
+            if (LigneMode == false) 
+            { 
+                // Ajouter le point où l'utilisateur a cliqué
+                points.Add(e.Location);
+                pictureBox.Invalidate(); // Demander le redessin de la PictureBox
+            }
         }
 
         public void StartMoving(bool loop = false)
@@ -68,6 +101,11 @@ namespace ApplicationRobot
             }
 
             Point currentPoint = points[currentPointIndex];
+            Point nextPoint = currentPointIndex + 1 < points.Count ? points[currentPointIndex + 1] : points[0]; // Boucle ou arrêt
+
+            // Calculer l'angle entre les points
+            float angle = CalculateAngle(square.X, square.Y, nextPoint.X, nextPoint.Y);
+            square.turnManager.SetAngle(angle); // Mettre à jour l'angle de rotation
             Point squarePosition = new Point(square.X, square.Y);
 
             // Calculer le vecteur de déplacement
@@ -83,6 +121,8 @@ namespace ApplicationRobot
                     if (loopMode)
                     {
                         currentPointIndex = 0; // Recommencer depuis le début si en mode boucle
+                        loopCounter++;
+                        form.UpdateLoopCounterLabel(loopCounter);
                     }
                     else
                     {
@@ -101,7 +141,14 @@ namespace ApplicationRobot
             square.Y += (int)(moveVector.Y / distance * moveDistance);
             pictureBox.Invalidate(); // Demander le redessin de la PictureBox
         }
-
+        private float CalculateAngle(int x1, int y1, int x2, int y2)
+        {
+            float angle = (float)(Math.Atan2(y2 - y1, x2 - x1) * (180 / Math.PI));
+            angle -= -90; // Ajustez pour que le haut du carré soit l'avant
+                         // Normaliser l'angle pour qu'il soit entre 0 et 360
+            angle = (angle + 360) % 360;
+            return angle;
+        }
         public void Draw(Graphics g)
         {
             // Dessiner les points
@@ -111,9 +158,26 @@ namespace ApplicationRobot
                 g.DrawString((i + 1).ToString(), SystemFonts.DefaultFont, Brushes.Black, points[i]);
             }
         }
+        public void ChargerItineraire(List<Point> nouvelItineraire)
+        {
+            // Remplacer l'itinéraire actuel par le nouvel itinéraire
+            this.points = new List<Point>(nouvelItineraire);
+
+            // Réinitialiser l'état pour commencer le mouvement depuis le début du nouvel itinéraire
+            this.currentPointIndex = 0;
+            this.loopCounter = 0;
+
+            // Optionnel : Réinitialiser d'autres états si nécessaire
+            // Exemple : Arrêter le mouvement actuel, si le carré est en déplacement
+            this.moveTimer.Stop();
+
+            // Demander la mise à jour de l'affichage si nécessaire
+            this.pictureBox.Invalidate();
+        }
         public void ResetPoints()
         {
             points.Clear(); // Effacer la liste des points
+            loopCounter = 0;
             pictureBox.Invalidate(); // Demander le redessin de la PictureBox pour effacer les points anciens
         }
         public void CancelAdding()
@@ -121,10 +185,98 @@ namespace ApplicationRobot
             // Annuler l'ajout de points
             EnablePointAdding(false);
             loopMode = false;
+            LigneMode = false;
 
+            moveTimer?.Stop();
             // Vous pouvez également effacer la liste de points si nécessaire
             points.Clear();
             pictureBox.Invalidate(); // Demander le redessin de la PictureBox
+        }
+        public void PauseMoving()
+        {
+            // Stops the timer and keeps the current position in the route.
+            moveTimer.Stop();
+        }
+
+        public void ResumeMoving()
+        {
+            // Starts the timer from the current position in the route.
+            moveTimer.Start();
+        }
+        public void CommencerNouvelItineraire(Point debut)
+        {
+            // Initialiser une nouvelle liste de points pour l'itinéraire
+            this.points.Clear();
+            this.points.Add(debut);
+        }
+
+        public void AjouterPointItineraire(Point point)
+        {
+            LigneMode = true;
+            if (points.Count > 0)
+            {
+                var lastPoint = points.Last();
+                if (Math.Sqrt(Math.Pow(lastPoint.X - point.X, 2) + Math.Pow(lastPoint.Y - point.Y, 2)) < 10)
+                {
+                    // The point is too close to the last point, so don't add it
+                    return;
+                }
+            }
+
+            this.points.Add(point);
+            this.pictureBox.Invalidate(); // Redraw the PictureBox to show the new point
+        }
+
+        public void SauvegarderItineraire(List<Point> points, string nomItineraire)
+        {
+            LigneMode = false;
+            string filePath = "@\"..\\..\\..\\..\\Historique\\itineraires.xml";
+            XElement root;
+
+            if (File.Exists(filePath))
+            {
+                root = XElement.Load(filePath);
+            }
+            else
+            {
+                root = new XElement("Itineraires");
+            }
+
+            int numeroItineraire = root.Elements("Itineraire").Count() + 1; // Déterminer le numéro du nouvel itinéraire
+            nomItineraire = Microsoft.VisualBasic.Interaction.InputBox("Entrez le nom de l'itinéraire :", "Nom de l'Itinéraire", "Itineraire X");
+            
+            if (!string.IsNullOrWhiteSpace(nomItineraire))
+            {
+                XElement itineraire = new XElement("Itineraire",
+                new XAttribute("Nom", nomItineraire),
+                new XAttribute("Date", DateTime.Now.ToString("yyyy-MM-dd")));
+
+                foreach (var point in points)
+                {
+                    itineraire.Add(new XElement("Point",
+                        new XAttribute("X", point.X),
+                        new XAttribute("Y", point.Y)));
+                }
+
+                root.Add(itineraire);
+                root.Save(filePath);
+            }
+            else
+            {
+               XElement itineraire = new XElement("Itineraire",
+               new XAttribute("Nom", $"Itineraire {numeroItineraire}"),
+               new XAttribute("Date", DateTime.Now.ToString("yyyy-MM-dd")));
+
+                foreach (var point in points)
+                {
+                    itineraire.Add(new XElement("Point",
+                        new XAttribute("X", point.X),
+                        new XAttribute("Y", point.Y)));
+                }
+
+                root.Add(itineraire);
+                root.Save(filePath);
+            }
         }
     }
 }
